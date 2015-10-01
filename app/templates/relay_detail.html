@@ -1,0 +1,208 @@
+<div class="accordion-group">
+<div class="panel panel-warning">
+  <div class="panel-heading" role="tab" id="heading{{counter}}">
+    <h5 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{counter}}" aria-expanded="true" aria-controls="collapse{{counter}}">
+        {{ relay["fingerprint"] }} | Nickname: {{relay["nickname"]}} <span><a target="_blank" href="https://globe.torproject.org/#/relay/{{relay['fingerprint']}}"><img src="https://globe.torproject.org/favicon.ico"></a></span>
+      </a>
+    </h5>
+  </div>
+  <div id="collapse{{counter}}" class="accordion-body collapse" role="tabpanel" aria-labelledby="heading{{counter}}">
+    <div class="panel-body">
+      <div class="container" style="position: relative; left: 3%;">
+        <div class="row">
+          <div class="col-md-4">
+            <h4>Flags</h4>
+            <div class="row">
+              <div class="col-md-4">
+                <div style="padding: 15%;">
+                  {% if relay["flags"][0][1] == 1 %}
+                  <p><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></p>
+                  {% else %}
+                  <p><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></p>
+                  {% endif %}
+                  <h5>{{ relay["flags"][0][0] }}</h5>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div style="padding: 15%;">
+                  {% if relay["flags"][1][1] == 1 %}
+                  <p><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></p>
+                  {% else %}
+                  <p><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></p>
+                  {% endif %}
+                  <h5>{{ relay["flags"][1][0] }}</h5>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div style="padding: 15%;">
+                  {% if relay["flags"][2][1] == 1 %}
+                  <p><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></p>
+                  {% else %}
+                  <p><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></p>
+                  {% endif %}
+                  <h5>{{ relay["flags"][2][0] }}</h5>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div style="padding: 15%;">
+                  {% if relay["flags"][3][1] == 1 %}
+                  <p><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></p>
+                  {% else %}
+                  <p><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></p>
+                  {% endif %}
+                  <h5>{{ relay["flags"][3][0] }}</h5>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div style="padding: 15%;">
+                  {% if relay["flags"][4][1] == 1 %}
+                  <p><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></p>
+                  {% else %}
+                  <p><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></p>
+                  {% endif %}
+                  <h5>{{ relay["flags"][4][0] }}</h5>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div style="padding: 15%;">
+                  {% if relay["flags"][5][1] == 1 %}
+                  <p><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></p>
+                  {% else %}
+                  <p><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></p>
+                  {% endif %}
+                  <h5>{{ relay["flags"][5][0] }}</h5>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div style="padding: 15%;">
+                  {% if relay["flags"][6][1] == 1 %}
+                  <p><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></p>
+                  {% else %}
+                  <p><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></p>
+                  {% endif %}
+                  <h5>{{ relay["flags"][6][0] }}</h5>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div style="padding: 15%;">
+                  {% if relay["flags"][7][1] == 1 %}
+                  <p><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></p>
+                  {% else %}
+                  <p><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></p>
+                  {% endif %}
+                  <h5>{{ relay["flags"][7][0] }}</h5>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div style="padding: 15%;">
+                  {% if relay["flags"][8][1] == 1 %}
+                  <p><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></p>
+                  {% else %}
+                  <p><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></p>
+                  {% endif %}
+                  <h5>{{ relay["flags"][8][0] }}</h5>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div style="padding: 15%;">
+                  {% if relay["flags"][9][1] == 1 %}
+                  <p><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></p>
+                  {% else %}
+                  <p><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></p>
+                  {% endif %}
+                  <h5>{{ relay["flags"][9][0] }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="col-md-5">
+                <h4>Exit policy</h4>
+                <div style="overflow: auto; max-height:40%">
+                  <table class="table table-fixed table-striped">
+                    <thead></thead>
+                    <tbody>
+                      {% for policy in relay["exit_policy"] %}
+                        <tr>
+                          <td>{{ policy }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-md-5">
+                {% for sum in relay["exit_policy_summary"] %}
+                  <h4>Exit policy summary: {{ sum }}</h4>
+                <div style="overflow: auto; max-height:40%">
+                  <table class="table table-fixed table-striped">
+                    <thead></thead>
+                    <tbody>
+                      {% for policy in relay["exit_policy_summary"][sum] %}
+                        <tr>
+                          <td>{{ policy }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4" style="padding:1.0%">
+            <h4>Observed Bandwidth</h4>
+            <h5>{{ "%.2f" | format(relay["observed_bandwidth"] / (1000.0 * 1000.0)) }} MB/s</h5>
+          </div>
+          <div class="col-md-4" style="padding:1.0%">
+            <h4>Consensus Weight</h4>
+            <h5>{{ relay["consensus_weight"] }}</h5>
+          </div>
+          <div class="col-md-4" style="padding:1.0%">
+            <h4>Consensus Weight Fraction</h4>
+            <h5>{{ "%.3f" | format(relay["consensus_weight_fraction"] * 100)}}%</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4" style="padding:1.0%">
+            <h4>Country</h4>
+            <h5>{{relay["country_name"]}} <span><img src="/static/img/flags/{{relay['country']}}.png"></span> </h5>
+          </div>
+          <div class="col-md-4" style="padding:1.0%">
+            <h4>OR Address</h4>
+            <h5>{{ relay["or_addresses"] | join(", ") }}</h5>
+          </div>
+          <div class="col-md-4" style="padding:1.0%">
+            <h4>Host Name</h4>
+            <h5>{{ relay["host_name"] }}</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4" style="padding:1.0%">
+            <h4>Platform</h4>
+            <h5>{{ relay["platform"] }}</h5>
+          </div>
+          <div class="col-md-4" style="padding:1.0%">
+            <h4>Last restarted</h4>
+            <h5>{{ relay["last_restarted"] }}</h5>
+          </div>
+          <div class="col-md-4" style="padding:1.0%">
+            <h4>First seen</h4>
+            <h5>{{ relay["first_seen"] }}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

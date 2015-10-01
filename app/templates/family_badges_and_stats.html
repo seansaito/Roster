@@ -1,0 +1,126 @@
+<div class="row" style="margin:2%;">
+  <div class="col-md-6">
+    <div class="row" style="margin:2%;">
+      <h2>Aggregate Data</h2>
+    </div>
+    <div class="row" id="stats">
+      <h3>Bandwidth Points</h3>
+      <h4>{{ "%.2f" | format(family["bandwidth_points"] / (1000.0 * 1000.0))}}</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Consensus Weight Points</h3>
+      <h4>{{ "%.2f" | format(family["consensus_points"]) }}</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Bandwidth</h3>
+      <h4>{{ "%.2f" | format(family["observed_bandwidth"] / (1000.0 * 1000.0)) }} MB/s</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Consensus Weight</h3>
+      <h4>{{ family["consensus_weight"]}} ({{ "%.3f" | format(family["consensus_weight_fraction"] * 100) }}%)</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Exit Probability</h3>
+      <h4>{{ "%.3f" | format(family["exit_probability"] * 100) }}%</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Number of relays</h3>
+      <h4>{{ family["families"] | length }}</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Middle Probability</h3>
+      <h4>{{ "%.3f" | format(family["middle_probability"] * 100) }}%</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Contact</h3>
+      {% for contact in family["contact"] %}
+      <h4>{{contact}}</h4>
+      {% endfor %}
+    </div>
+    <div class="row" id="stats">
+      <h3>Bitcoin Address</h3>
+      {% if family["bitcoin_addr"] != "None" %}
+        <a target="_blank" href="https://blockchain.info/address/{{ family['bitcoin_addr'] }}"><h4>{{ family["bitcoin_addr"] }}</h4></a>
+      {% else %}
+        <h4>None</h4>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="row" style="margin:2%;">
+      <h2>Badges</h2>
+    </div>
+    <div class="row" id="stats">
+      <h3>Bandwidth Badge</h3>
+      <h4><span><img src="/static/img/badges/{{ family['badges']['bandwidth'][1]}}.png"></span> {{ "%.2f" | format(family["badges"]["bandwidth"][0] * (100.0)) }} percentile</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Exit Bandwidth Badge</h3>
+      <h4><span><img src="/static/img/badges/{{ family['badges']['exit_bandwidth'][1]}}.png"></span> {{ "%.2f" | format(family["badges"]["exit_bandwidth"][0] * (100.0)) }} percentile</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Consensus Weight Badge</h3>
+      <h4><span><img src="/static/img/badges/{{ family['badges']['consensus_weight'][1]}}.png"></span> {{ "%.2f" | format(family["badges"]["consensus_weight"][0] * (100.0)) }} percentile</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Number of Countries</h3>
+      <h4><span><img src="/static/img/badges/{{ family['badges']['num_countries'][1]}}.png"></span> {{ family["badges"]["num_countries"][0] }} countries</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Number of Relays</h3>
+      <h4><span><img src="/static/img/badges/{{ family['badges']['num_relays'][1]}}.png"></span> {{ family["badges"]["num_relays"][0] }} relays</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Has Contact For At Least Half of Relays</h3>
+      {% if family["badges"]["has_contact_for_half"] %}
+      <h4><span><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></span></h4>
+      {% else %}
+      <h4><span><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></span></h4>
+      {% endif %}
+    </div>
+    <div class="row" id="stats">
+      <h3>Has Guard For At Least Half of Relays</h3>
+      {% if family["badges"]["has_guard_for_half"] %}
+      <h4><span><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></span></h4>
+      {% else %}
+      <h4><span><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></span></h4>
+      {% endif %}
+    </div>
+    <div class="row" id="stats">
+      <h3>No Self-Referencing Relays</h3>
+      {% if not family["badges"]["self_referencing"] %}
+      <h4><span><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></span></h4>
+      {% else %}
+      <h4><span><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></span> (Negative Points)</h4>
+      {% endif %}
+    </div>
+    <div class="row" id="stats">
+      <h3>Geo Diversity in Relays (Number of countries / Number of relays >= 0.5)</h3>
+      {% if family["badges"]["geo_diversity"] %}
+      <h4><span><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></span></h4>
+      {% else %}
+      <h4><span><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></span></h4>
+      {% endif %}
+    </div>
+    <div class="row" id="stats">
+      <h3>Runs Recommended Tor Version For All Relays</h3>
+      {% if family["badges"]["runs_recommended_tor"] %}
+      <h4><span><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></span></h4>
+      {% else %}
+      <h4><span><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></span></h4>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% if family["eligible_for_tshirt"] %}
+
+<div class="row">
+  <div class="col-md-6 col-sm-offset-3 text-center">
+    <h3>This family is eligible for a <a href="https://www.torproject.org/getinvolved/tshirt.html" target="_blank">
+      Tor t-shirt!</a><span><img src="/static/img/badges/tshirt.jpg" style="max-width: 50%; max-height: 50%;"></span></h3>
+  </div>
+</div>
+{% else %}
+{% endif %}

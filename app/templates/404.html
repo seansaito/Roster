@@ -1,0 +1,160 @@
+<html>
+<head>
+  <title>Family not found.</title>
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<script src="/static/js/jquery-1.11.2.min.js"></script>
+	<script src="/static/js/bootstrap.min.js"></script>
+	<script src="/static/js/bootstrap.js"></script>
+  <script src="/static/css/bootstrap-theme.min.css"></script>
+  <script src="/static/js/transition.js"></script>
+  <script src="/static/js/collapse.js"></script>
+  <style type="text/css">
+      .bs-example{ margin: 20px; }
+      #stats {
+        margin: 5%;
+      }
+      .center-block {
+				  display: block;
+					position: absolute;
+				  margin-left: auto;
+				  margin-right: auto;
+					top: 10%;
+					left: 13%;
+				}
+
+				// Usage as a mixin
+				.element {
+				  .center-block();
+				}
+				.navbar-default {
+				  background-color: #ef8b05;
+				  border-color: #fbad45;
+				}
+				.navbar-default .navbar-brand {
+				  color: #ecf0f1;
+				}
+				.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+				  color: #ef7705;
+				}
+				.navbar-default .navbar-text {
+				  color: #ecf0f1;
+				}
+				.navbar-default .navbar-nav > li > a {
+				  color: #ecf0f1;
+				}
+				.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+				  color: #ef7705;
+				}
+				.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+				  color: #ef7705;
+				  background-color: #fbad45;
+				}
+				.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+				  color: #ef7705;
+				  background-color: #fbad45;
+				}
+				.navbar-default .navbar-toggle {
+				  border-color: #fbad45;
+				}
+				.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+				  background-color: #fbad45;
+				}
+				.navbar-default .navbar-toggle .icon-bar {
+				  background-color: #ecf0f1;
+				}
+				.navbar-default .navbar-collapse,
+				.navbar-default .navbar-form {
+				  border-color: #ecf0f1;
+				}
+				.navbar-default .navbar-link {
+				  color: #ecf0f1;
+				}
+				.navbar-default .navbar-link:hover {
+				  color: #ef7705;
+				}
+
+				@media (max-width: 767px) {
+				  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+				    color: #ecf0f1;
+				  }
+				  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+				    color: #ef7705;
+				  }
+				  .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+				    color: #ef7705;
+				    background-color: #fbad45;
+				  }
+				}
+        .table-striped>tbody>tr:nth-child(odd)>td,
+        .table-striped>tbody>tr:nth-child(odd)>th {
+	          background-color: #fff2db;
+        }
+  </style>
+  <style>
+     html, body, #map-canvas {
+       height: 94%;
+       width: 95%;
+       padding: 0.5%;
+       margin: auto;
+       position: absolute;
+       top: 2%;
+       left: 0;
+       bottom: 0;
+       right: 0;
+     }
+   </style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div class="row">
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+        data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{{ url_for ('index') }}">Roster</a>
+      </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+            <li><a href="https://roster-tor.s3.amazonaws.com/stats">Relay Stats</a></li>
+            <li><a href="https://roster-tor.s3.amazonaws.com/bandwidth.json">Bandwidth Rankings</a></li>
+            <li><a href="https://roster-tor.s3.amazonaws.com/consensus.json">Consensus Rankings</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#">A relay operator? Search here:</a></li>
+          <form class="navbar-form navbar-right" role="search" action="/search" method="post">
+          <li>
+            <div class="form-group">
+              <input type="text" name="fingerprint" class="form-control" placeholder="Enter fingerprint">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+          </li>
+        </form>
+      </ul>
+      </div>
+    </div>
+  </nav>
+  </div>
+  <div class="row">
+  </div>
+  <div class="row" >
+  <div class="container">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+      <h4 style="position: relative; top: 50%;">Relay is not found. Make sure you search a running relay.</h4>
+    </div>
+    <div class="col-md-4">
+    </div>
+  </div>
+</div>
+</body>
+</html>
