@@ -125,7 +125,7 @@ def get_avg_bandwidth(response):
     return round(calculate_2mo_avg(response, 'bandwidth') / 1000.0, 2)
 
 
-def check_tshirt(fingerprint):
+def check_tshirt(fingerprint, connector):
     """ Fetches required onionoo documents and evaluates the
       t-shirt qualification criteria for each of the relays """
 
@@ -146,8 +146,6 @@ def check_tshirt(fingerprint):
         print("Oops! Inconsistent onionoo data")
         exit()
     """
-
-    connector = OnionooConnector("details", "uptime", "bandwidth")
 
     details_data = connector.find_by_fingerprint(connector.details_relays, fingerprint)
     uptime_data = connector.find_by_fingerprint(connector.uptime_relays, fingerprint)

@@ -12,15 +12,15 @@ script_dir = os.path.dirname(__file__)
 
 # Relative paths
 rel_paths = {
-    "bandwidth": "app/static/json/top10_bandwidth.json",
-    "consensus": "app/static/json/top10_consensus.json",
+    "top10_bandwidth": "app/static/json/top10_bandwidth.json",
+    "top10_consensus": "app/static/json/top10_consensus.json",
     "all_families": "app/static/json/all.json"
 }
 
 # Absolute paths
 abs_paths = {
-    "bandwidth": os.path.join(script_dir, rel_paths["bandwidth"]),
-    "consensus": os.path.join(script_dir, rel_paths["consensus"]),
+    "top10_bandwidth": os.path.join(script_dir, rel_paths["top10_bandwidth"]),
+    "top10_consensus": os.path.join(script_dir, rel_paths["top10_consensus"]),
     "all_families": os.path.join(script_dir, rel_paths["all_families"])
 }
 

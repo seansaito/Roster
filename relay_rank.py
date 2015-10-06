@@ -1,25 +1,36 @@
+"""
+    A script that takes the aggregated group of relays (families) and converts them into rankings.
+    It also stores stats and .json files for countries, ports, etc. It acts as a central controller that
+    talks to family_aggregator, relay_stats_aggregator, tshirt_validator. At the end, it uploads all stats
+    files to AWS S3.
+"""
+
 from app import app
 from app.controllers.relay_stats_aggregator import RelayStatsAggregator
 from app.models.family_aggregator import FamilyAggregator
 
-import httplib2, json, os, datetime, csv
+import json, os, datetime, csv
 
 import boto
 from boto.s3.key import Key
 
 import pycountry
 from collections import OrderedDict
-from difflib import SequenceMatcher
 
 from global_vars import *
 
+"""
+    This function takes an array of relays and records two statistics w.r.t. countries:
+        - Distribution of physical relays for each country
+        - Distribution of consensus weight for each country
+"""
 def record_country_stats(relays):
     print "[record_country_stats] Recording country stats"
 
     # Paths
-    script_dir = "app/"
-    relay_count_path = os.path.join(script_dir, "static/csv/country_relay_count.csv")
-    cw_fraction_path = os.path.join(script_dir, "static/csv/country_cw_fraction.csv")
+    script_dir = "app/static/csv/"
+    relay_count_path = os.path.join(script_dir, "country_relay_count.csv")
+    cw_fraction_path = os.path.join(script_dir, "country_cw_fraction.csv")
 
     # dicts which store number of relays/cw fraction in each country
     relay_count = OrderedDict()
@@ -49,9 +60,10 @@ def record_country_stats(relays):
     bucket_key.get_contents_to_filename(cw_fraction_path)
     b.set_acl("public-read", "country_cw_fraction.csv")
 
+    # Write data for each stat
     time = "-".join(datetime.datetime.strftime(datetime.datetime.now(), "%Y, %m, %d, %H, %M, %S").split(", "))
     for path, data in [(relay_count_path, relay_count), (cw_fraction_path, cw_fraction)]:
-        with open(path, "w+") as f:
+        with open(path, "a") as f:
             c = csv.writer(f)
             c.writerow([time] + data.values())
             f.close()
@@ -59,6 +71,8 @@ def record_country_stats(relays):
     print "[record_country_stats] End record_country_stats"
     return (relay_count, cw_fraction)
 
+
+# Helper functions for record_port_stats
 def parse_between(string):
     if "-" in string:
         res = string.split("-")
@@ -73,7 +87,11 @@ def stack_dictionaries(dict1, dict2):
         dict1[key] += dict2[key]
     return
 
-def record_port_stats(running_relays):
+"""
+    This function takes an array of relays and records the number of times
+    each port is accepted in the exit policy.
+"""
+def record_port_stats(relays):
     print "[record_port_stats] Recording port stats"
     script_dir = "app/"
     rel_path = "static/json/ports.json"
@@ -88,7 +106,7 @@ def record_port_stats(running_relays):
     init_vals = {"accept": 1, "reject": 0}
 
     # Loop through each relay
-    for relay in running_relays:
+    for relay in relays:
         policy = relay["exit_policy_summary"].keys()[0]
         if relay["exit_policy_summary"][policy][0] == "1-65535":
             continue
@@ -117,7 +135,7 @@ def record_port_stats(running_relays):
     return all_ports
 
 def store_rankings(groups):
-    rankings = {"bandwidth": groups["bandwidth_top10"], "consensus": groups["consensus_top10"], "all_families": groups["families"]}
+    rankings = {"top10_bandwidth": groups["bandwidth_top10"], "top10_consensus": groups["consensus_top10"], "all_families": groups["families"]}
 
     # Using abs_paths dictionary from global_vars.py
     for key, path in abs_paths.items():
@@ -148,14 +166,11 @@ if __name__ == "__main__":
     groups["families"] = families
     groups["relays"] = relays
 
+    # Get rankings and stats
     groups["bandwidth_rankings"] = sorted(families, key=lambda family: family["observed_bandwidth"], reverse=True)
-
     groups["consensus_rankings"] = sorted(families, key=lambda family: family["consensus_weight_fraction"], reverse=True)
-
     groups["exit_bandwidth_rankings"] = sorted(families, key=lambda family: family["exit_bandwidth"], reverse=True)
-
     groups["country_count_rankings"], groups["country_cw_rankings"] = record_country_stats(relays)
-
     groups["port_rankings"] = record_port_stats(relays)
 
     stats_aggregator = RelayStatsAggregator(groups)
@@ -170,11 +185,10 @@ if __name__ == "__main__":
     groups["relays"] = relays
 
     groups["bandwidth_rankings"] = sorted(families, key=lambda family: family["observed_bandwidth"], reverse=True)
-
     groups["consensus_rankings"] = sorted(families, key=lambda family: family["consensus_weight_fraction"], reverse=True)
-
     groups["exit_bandwidth_rankings"] = sorted(families, key=lambda family: family["exit_bandwidth"], reverse=True)
 
+    # These are used for the index page
     groups["bandwidth_top10"] = groups["bandwidth_rankings"][:10]
     groups["consensus_top10"] = groups["consensus_rankings"][:10]
     groups["exit_bandwidth_top10"] = groups["exit_bandwidth_rankings"][:10]
@@ -182,5 +196,8 @@ if __name__ == "__main__":
     # Stores bandwidth rankings, consensus_weight rankings, all.json
     store_rankings(groups)
 
+    # Uploads the data and stats to AWS S3
     from upload import *
     map(upload, assets)
+
+    return

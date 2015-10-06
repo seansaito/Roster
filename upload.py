@@ -2,8 +2,8 @@ import boto, os
 from boto.s3.key import Key
 from global_vars import *
 
-assets = [  ("app/static/json/top10_bandwidth.json", "bandwidth.json"),
-            ("app/static/json/top10_consensus.json", "consensus.json"),
+assets = [  ("app/static/json/top10_bandwidth.json", "top10_bandwidth.json"),
+            ("app/static/json/top10_consensus.json", "top10_consensus.json"),
             ("app/static/json/all.json", "all.json"),
             ("app/static/json/ports.json", "ports.json"),
             ("app/static/csv/country_relay_count.csv", "country_relay_count.csv"),

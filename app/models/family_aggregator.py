@@ -21,7 +21,7 @@ class FamilyAggregator(object):
     __metaclass__ = Singleton
 
     def __init__(self):
-        self.c = OnionooConnector("details")
+        self.c = OnionooConnector("details", "uptime", "bandwidth")
         self.relays = self.c.details_relays
         self.families = self.group_by_family()
 
@@ -154,7 +154,7 @@ class FamilyAggregator(object):
                 if "country" in relay:
                     family["countries"].append(relay["country"])
 
-                if check_tshirt(relay["fingerprint"]):
+                if check_tshirt(relay["fingerprint"], self.c):
                     family["t_shirts"].append(relay["fingerprint"])
                     family["eligible_for_tshirt"] = True
 
@@ -182,7 +182,7 @@ class FamilyAggregator(object):
                                 self.fill_in(other_relay, ["middle_probability", "exit_probability", "observed_bandwidth", "consensus_weight", "consensus_weight_fraction"], family)
                                 if "country" in other_relay and other_relay["country"] not in family["countries"]:
                                     family["countries"].append(other_relay["country"])
-                                if check_tshirt(other_relay["fingerprint"]):
+                                if check_tshirt(other_relay["fingerprint"], self.c):
                                     family["t_shirts"].append(other_relay["fingerprint"])
                                     family["eligible_for_tshirt"] = True
                                 if "Exit" in other_relay["flags"]:
@@ -201,7 +201,7 @@ class FamilyAggregator(object):
 
                 families.append(family)
 
-            # End sieve
-            print "[group_by_family] End sieve"
+        # End sieve
+        print "[group_by_family] End sieve"
 
-            return families
+        return families

@@ -17,20 +17,42 @@ def index():
     c = boto.connect_s3(acc_key, acc_sec)
     b = c.get_bucket(bucket)
     bucket_key = Key(b)
+    
+    bucket_key.key = "top10_bandwidth.json"
+    top10_bandwidth = []
 
+    with open(abs_paths["top10_bandwidth"], "w+") as fp:
+        bucket_key.get_file(fp)
+        fp.seek(0)
+        top10_bandwidth = json.load(fp)
+        fp.close()
+
+    bucket_key.key = "top10_consensus.json"
+    top10_consensus = []
+
+    with open(abs_paths["top10_consensus"], "w+") as fp:
+        bucket_key.get_file(fp)
+        fp.seek(0)
+        top10_consensus = json.load(fp)
+        fp.close()
+
+    return render_template("index.html", top10_bandwidth=top10_bandwidth, top10_consensus=top10_consensus)
+
+    """
     # Arrays that will store json data of top 10 families for each categories
     top10_bandwidth, top10_consensus = [], []
 
     # Write the json files from S3 to local, then load them into the array stores
-    for key, array_store in [("bandwidth.json", top10_bandwidth), ("consensus.json", top10_consensus)]:
+    for key, array_store in [("top10_bandwidth.json", top10_bandwidth), ("top10_consensus.json", top10_consensus)]:
         bucket_key.key = key
-        with open(abs_paths[key[:-5]], "w+") as fp:
+        with open(abs_paths[key[:-5]], "r+") as fp:
             bucket_key.get_file(fp)
             fp.seek(0)
             array_store = json.load(fp)
             fp.close()
 
     return render_template("index.html", top10_bandwidth=top10_bandwidth, top10_consensus=top10_consensus)
+    """
 
 """
 Route for family dashboard page. Searches the json files for the given
@@ -44,7 +66,7 @@ def family_detail(fingerprint):
     bucket_key = Key(b)
 
     theOne = ""
-    for key in ["bandwidth.json", "consensus.json", "all.json"]:
+    for key in ["top10_bandwidth.json", "top10_consensus.json", "all.json"]:
         array_store = []
         bucket_key.key = key
 
@@ -58,7 +80,7 @@ def family_detail(fingerprint):
         # Loop through families to search for the family with given fingerprint
         for family in array_store:
             for relay in family["families"]:
-                if relay["families"] == fingerprint:
+                if relay["fingerprint"] == fingerprint:
                     theOne = family
                     break
 
