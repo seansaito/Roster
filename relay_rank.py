@@ -199,5 +199,3 @@ if __name__ == "__main__":
     # Uploads the data and stats to AWS S3
     from upload import *
     map(upload, assets)
-
-    return
