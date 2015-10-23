@@ -127,12 +127,46 @@ def record_port_stats(relays):
                     relay_ports[i] = offset_value
         stack_dictionaries(all_ports, relay_ports)
 
-    jsonFile = open(abs_file_path, "w+")
-    jsonFile.write(json.dumps(all_ports))
-    jsonFile.close()
+    json_file = open(abs_file_path, "w+")
+    json_file.write(json.dumps(all_ports))
+    json_file.close()
 
     print "[record_port_stats] End record ports stats"
     return all_ports
+
+"""
+    A function that separates the relays based on AS number.
+    For each AS number, the function stores the following in JSON format:
+        - Relay fingerprints in that AS
+        - OR Address of each relay
+        - Aggregate Bandwidth
+        - Aggregate Consensus Weight Fraction
+        - Country code (in ISO2)
+    Relays that don't list their AS number will be grouped in no_as_number
+"""
+def group_by_AS(relays):
+    grouped_AS_stats = {}
+
+    for relay in relays:
+        as_number = relay.setdefault("as_number", "no_as_number")
+        if as_number in grouped_AS_stats:
+            grouped_AS_stats[as_number]["relays"].append(relay["fingerprint"])
+            grouped_AS_stats[as_number]["or_addresses"].append(relay["or_addresses"])
+            grouped_AS_stats[as_number]["bandwidth"] += relay["observed_bandwidth"]
+            grouped_AS_stats[as_number]["cw_fraction"] += relay["consensus_weight_fraction"]
+            if relay.setdefault("country", "") not in grouped_AS_stats[as_number]["country"]:
+                grouped_AS_stats[as_number]["country"].append(relay.setdefault("country", ""))
+        else:
+            grouped_AS_stats[as_number] = {
+                "relays": [relay["fingerprint"]],
+                "bandwidth": relay["observed_bandwidth"],
+                "cw_fraction": relay["consensus_weight_fraction"],
+                "country": [relay.setdefault("country", "")],
+                "or_addresses": [relay["or_addresses"]]
+            }
+
+    return grouped_AS_stats
+
 
 def store_rankings(groups):
     rankings = {"top10_bandwidth": groups["bandwidth_top10"], "top10_consensus": groups["consensus_top10"], "all_families": groups["families"]}
