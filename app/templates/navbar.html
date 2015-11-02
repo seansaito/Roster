@@ -1,0 +1,33 @@
+<div class="row">
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="{{ url_for ('index') }}">Roster</a>
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+          <li><a href="{{ url_for ('badges') }}">Badges</a>
+          <li><a href="https://roster-tor.s3.amazonaws.com/stats.csv">Relay Stats</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Raw Data (.json)<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="https://roster-tor.s3.amazonaws.com/bandwidth.json">Bandwidth Rankings</a></li>
+              <li><a href="https://roster-tor.s3.amazonaws.com/consensus.json">Consensus Rankings</a></li>
+            </ul>
+          </li>
+      </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a>A relay operator? Search here:</a></li>
+          <form class="navbar-form navbar-right" role="search" action="/search" method="post">
+          <li>
+            <div class="form-group">
+              <input type="text" name="fingerprint" class="form-control" placeholder="Enter fingerprint">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+          </li>
+        </form>
+      </ul>
+    </div>
+  </div>
+</nav>
+</div>

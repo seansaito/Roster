@@ -1,0 +1,166 @@
+@font-face {
+	font-family: 'icomoon';
+	src:url('fonts/icomoon.eot?xb6rdg');
+	src:url('fonts/icomoon.eot?xb6rdg#iefix') format('embedded-opentype'),
+		url('fonts/icomoon.ttf?xb6rdg') format('truetype'),
+		url('fonts/icomoon.woff?xb6rdg') format('woff'),
+		url('fonts/icomoon.svg?xb6rdg#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-pencil:before {
+	content: "\e918";
+}
+.icon-pacman:before {
+	content: "\e919";
+}
+.icon-spades:before {
+	content: "\e91a";
+}
+.icon-clubs:before {
+	content: "\e91b";
+}
+.icon-diamonds:before {
+	content: "\e91c";
+}
+.icon-bullhorn:before {
+	content: "\e91d";
+}
+.icon-connection:before {
+	content: "\e91e";
+}
+.icon-mic:before {
+	content: "\e91f";
+}
+.icon-address-book:before {
+	content: "\e900";
+}
+.icon-location2:before {
+	content: "\e901";
+}
+.icon-compass:before {
+	content: "\e902";
+}
+.icon-compass2:before {
+	content: "\e903";
+}
+.icon-drawer:before {
+	content: "\e904";
+}
+.icon-database:before {
+	content: "\e920";
+}
+.icon-bubbles3:before {
+	content: "\e905";
+}
+.icon-enlarge2:before {
+	content: "\e906";
+}
+.icon-stats-dots:before {
+	content: "\e907";
+}
+.icon-trophy:before {
+	content: "\e908";
+}
+.icon-gift:before {
+	content: "\e909";
+}
+.icon-rocket:before {
+	content: "\e90a";
+}
+.icon-lab:before {
+	content: "\e90b";
+}
+.icon-airplane:before {
+	content: "\e90c";
+}
+.icon-road:before {
+	content: "\e90d";
+}
+.icon-target:before {
+	content: "\e90e";
+}
+.icon-shield:before {
+	content: "\e90f";
+}
+.icon-power:before {
+	content: "\e910";
+}
+.icon-switch:before {
+	content: "\e911";
+}
+.icon-tree:before {
+	content: "\e921";
+}
+.icon-earth:before {
+	content: "\e912";
+}
+.icon-heart:before {
+	content: "\e922";
+}
+.icon-heart-broken:before {
+	content: "\e923";
+}
+.icon-happy:before {
+	content: "\e924";
+}
+.icon-smile:before {
+	content: "\e913";
+}
+.icon-tongue:before {
+	content: "\e914";
+}
+.icon-cool:before {
+	content: "\e925";
+}
+.icon-checkmark:before {
+	content: "\e915";
+}
+.icon-spell-check:before {
+	content: "\e926";
+}
+.icon-exit:before {
+	content: "\e916";
+}
+.icon-share2:before {
+	content: "\e917";
+}
+
+#platinum {
+  font-size: 4em;
+  padding: 3px;
+  color: #cecdcb;
+}
+
+#gold {
+  font-size: 4em;
+  padding: 3px;
+  color: #e5c100;
+}
+
+#silver {
+  font-size: 4em;
+  padding: 3px;
+  color: #0000cc;
+}
+
+#bronze {
+  font-size: 4em;
+  padding: 3px;
+  color: #00b200;
+}

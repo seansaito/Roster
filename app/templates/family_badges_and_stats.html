@@ -1,6 +1,6 @@
 <div class="row" style="margin:2%;">
   <div class="col-md-6">
-    <div class="row" style="margin:2%;">
+    <div class="row" id="stats">
       <h2>Aggregate Data</h2>
     </div>
     <div class="row" id="stats">
@@ -34,7 +34,7 @@
     <div class="row" id="stats">
       <h3>Contact</h3>
       {% for contact in family["contact"] %}
-      <h4>{{contact}}</h4>
+      <h4 style="padding: 1%;">{{contact}}</h4>
       {% endfor %}
     </div>
     <div class="row" id="stats">
@@ -47,28 +47,28 @@
     </div>
   </div>
   <div class="col-md-6">
-    <div class="row" style="margin:2%;">
+    <div class="row">
       <h2>Badges</h2>
     </div>
     <div class="row" id="stats">
       <h3>Bandwidth Badge</h3>
-      <h4><span><img src="/static/img/badges/{{ family['badges']['bandwidth'][1]}}.png"></span> {{ "%.2f" | format(family["badges"]["bandwidth"][0] * (100.0)) }} percentile</h4>
+      <h4><span class="icon-rocket" id="{{ family['badges']['bandwidth'][1]}}"></span> {{ "%.2f" | format(family["badges"]["bandwidth"][0] * (100.0)) }} percentile</h4>
     </div>
     <div class="row" id="stats">
       <h3>Exit Bandwidth Badge</h3>
-      <h4><span><img src="/static/img/badges/{{ family['badges']['exit_bandwidth'][1]}}.png"></span> {{ "%.2f" | format(family["badges"]["exit_bandwidth"][0] * (100.0)) }} percentile</h4>
+      <h4><span class="icon-exit" id= "{{ family['badges']['exit_bandwidth'][1]}}"></span> {{ "%.2f" | format(family["badges"]["exit_bandwidth"][0] * (100.0)) }} percentile</h4>
     </div>
     <div class="row" id="stats">
       <h3>Consensus Weight Badge</h3>
-      <h4><span><img src="/static/img/badges/{{ family['badges']['consensus_weight'][1]}}.png"></span> {{ "%.2f" | format(family["badges"]["consensus_weight"][0] * (100.0)) }} percentile</h4>
+      <h4><span class="icon-tree" id="{{ family['badges']['consensus_weight'][1]}}"></span> {{ "%.2f" | format(family["badges"]["consensus_weight"][0] * (100.0)) }} percentile</h4>
     </div>
     <div class="row" id="stats">
       <h3>Number of Countries</h3>
-      <h4><span><img src="/static/img/badges/{{ family['badges']['num_countries'][1]}}.png"></span> {{ family["badges"]["num_countries"][0] }} countries</h4>
+      <h4><span class="icon-earth" id="{{ family['badges']['num_countries'][1]}}"></span> {{ family["badges"]["num_countries"][0] }} countries</h4>
     </div>
     <div class="row" id="stats">
       <h3>Number of Relays</h3>
-      <h4><span><img src="/static/img/badges/{{ family['badges']['num_relays'][1]}}.png"></span> {{ family["badges"]["num_relays"][0] }} relays</h4>
+      <h4><span class="icon-road" id="{{ family['badges']['num_relays'][1]}}"></span> {{ family["badges"]["num_relays"][0] }} relays</h4>
     </div>
     <div class="row" id="stats">
       <h3>Has Contact For At Least Half of Relays</h3>

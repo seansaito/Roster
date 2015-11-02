@@ -1,0 +1,283 @@
+<html>
+<head>
+  <title>Badges</title>
+  <!-- Bootstrap -->
+  	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+  	<link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+  	<script src="/static/js/collapse.js"></script>
+    <link href="/static/css/navbar.css" rel="stylesheet">
+    <link href="/static/css/badges.css" rel="stylesheet">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+
+  {% include "navbar.html" %}
+
+  <div class="container">
+    <div class="center-block">
+      <div class="row">
+        <h1>Badges <span><h3>Details and Requirements</h3></span></h1>
+      </div>
+
+      <div class="row" style="margin: 3%;">
+        <div class="col-md-4 text-center">
+          <h3> </h3>
+        </div>
+
+        <div class="col-md-8">
+          <div class="col-md-6">
+            <div class="col-md-6 text-center" style="padding: 4%;">
+              <h3>Platinum</h3>
+            </div>
+            <div class="col-md-6 text-center" style="padding: 4%;">
+              <h3>Gold</h3>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="col-md-6 text-center" style="padding: 4%;">
+              <h3>Silver</h3>
+            </div>
+            <div class="col-md-6 text-center" style="padding: 4%;">
+              <h3>Bronze</h3>
+            </div>
+          </div>
+        </div>
+      </div> <!-- row -->
+
+      <div class="row" style="margin: 5%;">
+        <div class="col-md-4 text-center">
+          <h2>Bandwidth</h2>
+        </div>
+
+        <div class="col-md-8">
+          <div class="col-md-6">
+
+            <div class="col-md-6">
+              <div class="card card-block text-center" style="padding: 4%;">
+                <span class="icon-rocket" id="platinum" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 80% percentile</p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card card-block text-center" style="padding: 4%;">
+                <span class="icon-rocket" id="gold" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 60% percentile</p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+
+            <div class="col-md-6">
+              <div class="card card-block text-center" style="padding: 4%;">
+                <span class="icon-rocket" id="silver" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 40% percentile</p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card card-block text-center" style="padding: 4%;">
+                <span class="icon-rocket" id="bronze" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 20% percentile</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- row -->
+
+      <div class="row" style="margin: 5%;"  >
+        <div class="col-md-4 text-center">
+          <h2>Exit Bandwidth</h2>
+        </div>
+
+        <div class="col-md-8">
+          <div class="col-md-6">
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-exit" id="platinum" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 80% percentile</p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-exit" id="gold" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 60% percentile</p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-exit" id="silver" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 40% percentile</p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-exit" id="bronze" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 20% percentile</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- row -->
+
+      <div class="row" style="margin: 5%;"  >
+        <div class="col-md-4 text-center">
+          <h2>Consensus Weight</h2>
+        </div>
+
+        <div class="col-md-8">
+          <div class="col-md-6">
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-tree" id="platinum" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 80% percentile</p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-tree" id="gold" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 60% percentile</p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-tree" id="silver" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 40% percentile</p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-tree" id="bronze" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 20% percentile</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- row -->
+
+      <div class="row" style="margin: 5%;"  >
+        <div class="col-md-4 text-center">
+          <h2>Number of Countries</h2>
+        </div>
+
+        <div class="col-md-8">
+          <div class="col-md-6">
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-earth" id="platinum" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 80% percentile</p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-earth" id="gold" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 60% percentile</p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-earth" id="silver" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 40% percentile</p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-earth" id="bronze" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 20% percentile</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- row -->
+
+      <div class="row" style="margin: 5%;"  >
+        <div class="col-md-4 text-center">
+          <h2>Number of Relays</h2>
+        </div>
+
+        <div class="col-md-8">
+          <div class="col-md-6">
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-road" id="platinum" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 80% percentile</p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-road" id="gold" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 60% percentile</p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-road" id="silver" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 40% percentile</p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card card-block text-center">
+                <span class="icon-road" id="bronze" style="font-size: 4em; padding: 3px;"> </span>
+                <p class="card-text">&ge; 20% percentile</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- row -->
+
+
+    </div><!-- center-block -->
+  </div> <!-- container -->
+
+
+</body>
+</html>

@@ -17,7 +17,7 @@ def index():
     c = boto.connect_s3(acc_key, acc_sec)
     b = c.get_bucket(bucket)
     bucket_key = Key(b)
-    
+
     bucket_key.key = "top10_bandwidth.json"
     top10_bandwidth = []
 
@@ -37,22 +37,6 @@ def index():
         fp.close()
 
     return render_template("index.html", top10_bandwidth=top10_bandwidth, top10_consensus=top10_consensus)
-
-    """
-    # Arrays that will store json data of top 10 families for each categories
-    top10_bandwidth, top10_consensus = [], []
-
-    # Write the json files from S3 to local, then load them into the array stores
-    for key, array_store in [("top10_bandwidth.json", top10_bandwidth), ("top10_consensus.json", top10_consensus)]:
-        bucket_key.key = key
-        with open(abs_paths[key[:-5]], "r+") as fp:
-            bucket_key.get_file(fp)
-            fp.seek(0)
-            array_store = json.load(fp)
-            fp.close()
-
-    return render_template("index.html", top10_bandwidth=top10_bandwidth, top10_consensus=top10_consensus)
-    """
 
 """
 Route for family dashboard page. Searches the json files for the given
@@ -125,3 +109,7 @@ def parse_flags(relay):
 def search():
     fingerprint = request.form["fingerprint"]
     return redirect(url_for("family_detail", fingerprint=fingerprint))
+
+@app.route("/badges")
+def badges():
+    return render_template("badges.html")
