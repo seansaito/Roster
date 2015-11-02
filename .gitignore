@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 
+# Virtualenv folder
+roster/
+
 # C extensions
 *.so
 
