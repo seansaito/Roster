@@ -169,7 +169,9 @@ def group_by_AS(relays):
 
 
 def store_rankings(groups):
-    rankings = {"top10_bandwidth": groups["bandwidth_top10"], "top10_consensus": groups["consensus_top10"], "all_families": groups["families"]}
+    rankings = {"top10_bandwidth": groups["bandwidth_top10"],
+                "top10_consensus": groups["consensus_top10"],
+                "all": groups["families"]}
 
     # Using abs_paths dictionary from global_vars.py
     for key, path in abs_paths.items():

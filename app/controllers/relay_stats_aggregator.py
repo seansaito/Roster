@@ -94,13 +94,6 @@ class RelayStatsAggregator(object):
         numGuard = sum([1 for relay in family["families"] if "Guard" in relay["flags"]])
         return float(numGuard)/float(numRelays) >= 0.5
 
-    def is_self_referencing(self, fingerprint):
-        family, counter = self.find_by_fingerprint(fingerprint, self.families)
-        for relay in family["families"]:
-            if "family" in relay and "$" + relay["fingerprint"] in relay["family"]:
-                return True
-        return False
-
     def has_geo_diversity(self, fingerprint):
         family, counter = self.find_by_fingerprint(fingerprint, self.families)
         return len(family["families"]) >= 5 and float(len(family["countries"])) / float(len(family["families"])) >= 0.5
@@ -186,7 +179,6 @@ class RelayStatsAggregator(object):
         badges["num_relays"] = self.get_num_relays_badge(fingerprint)
         badges["has_contact_for_half"] = self.get_contact_badge(fingerprint)
         badges["has_guard_for_half"] = self.get_guard_badge(fingerprint)
-        badges["self_referencing"] = self.is_self_referencing(fingerprint)
         badges["geo_diversity"] = self.has_geo_diversity(fingerprint)
         badges["rare_countries"] = self.get_rare_countries_badge(fingerprint)
         badges["liberal_exit"] = self.get_liberal_exit_badge(fingerprint)

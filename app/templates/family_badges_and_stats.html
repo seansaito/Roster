@@ -87,14 +87,6 @@
       {% endif %}
     </div>
     <div class="row" id="stats">
-      <h3>No Self-Referencing Relays</h3>
-      {% if not family["badges"]["self_referencing"] %}
-      <h4><span><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></span></h4>
-      {% else %}
-      <h4><span><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></span> (Negative Points)</h4>
-      {% endif %}
-    </div>
-    <div class="row" id="stats">
       <h3>Geo Diversity in Relays (Number of countries / Number of relays >= 0.5)</h3>
       {% if family["badges"]["geo_diversity"] %}
       <h4><span><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></span></h4>
@@ -118,7 +110,7 @@
 
 <div class="row">
   <div class="col-md-6 col-sm-offset-3 text-center">
-    <h3>This family is eligible for a <a href="https://www.torproject.org/getinvolved/tshirt.html" target="_blank">
+    <h3>This operator is eligible for a <a href="https://www.torproject.org/getinvolved/tshirt.html" target="_blank">
       Tor t-shirt!</a><span><img src="/static/img/badges/tshirt.jpg" style="max-width: 50%; max-height: 50%;"></span></h3>
   </div>
 </div>

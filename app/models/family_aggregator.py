@@ -63,7 +63,6 @@ class FamilyAggregator(object):
             for fingerprint in temp["extended_family"]:
                 if "$" + temp["fingerprint"] == fingerprint:
                     if family != "":
-                        # family["badges"]["self_referencing"] += 1
                         continue
                 elif len(fingerprint) < 41:
                     continue
@@ -111,8 +110,7 @@ class FamilyAggregator(object):
             "runs_recommended_tor": 0,
             "liberal_exit:": 0,
             "rare_countries": 0,
-            "geo_diversity": 0,
-            "self_referencing": 0
+            "geo_diversity": 0
         }
 
         print "[group_by_family] Begin sieve"
