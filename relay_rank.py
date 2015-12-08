@@ -16,6 +16,7 @@ from boto.s3.key import Key
 
 import pycountry
 from collections import OrderedDict
+import re
 
 from global_vars import *
 
@@ -134,7 +135,8 @@ def record_port_stats(relays):
     print "[record_port_stats] End record ports stats"
     return all_ports
 
-"""
+def group_by_AS(relays):
+    """
     A function that separates the relays based on AS number.
     For each AS number, the function stores the following in JSON format:
         - Relay fingerprints in that AS
@@ -143,8 +145,7 @@ def record_port_stats(relays):
         - Aggregate Consensus Weight Fraction
         - Country code (in ISO2)
     Relays that don't list their AS number will be grouped in no_as_number
-"""
-def group_by_AS(relays):
+    """
     grouped_AS_stats = {}
 
     for relay in relays:
@@ -153,19 +154,60 @@ def group_by_AS(relays):
             grouped_AS_stats[as_number]["relays"].append(relay["fingerprint"])
             grouped_AS_stats[as_number]["or_addresses"].append(relay["or_addresses"])
             grouped_AS_stats[as_number]["bandwidth"] += relay["observed_bandwidth"]
-            grouped_AS_stats[as_number]["cw_fraction"] += relay["consensus_weight_fraction"]
+            grouped_AS_stats[as_number]["cw_fraction"] += relay.setdefault("consensus_weight_fraction", 0)
             if relay.setdefault("country", "") not in grouped_AS_stats[as_number]["country"]:
                 grouped_AS_stats[as_number]["country"].append(relay.setdefault("country", ""))
         else:
             grouped_AS_stats[as_number] = {
                 "relays": [relay["fingerprint"]],
                 "bandwidth": relay["observed_bandwidth"],
-                "cw_fraction": relay["consensus_weight_fraction"],
+                "cw_fraction": relay.setdefault("consensus_weight_fraction", 0),
                 "country": [relay.setdefault("country", "")],
                 "or_addresses": [relay["or_addresses"]]
             }
 
     return grouped_AS_stats
+
+def group_by_ipv6(relays):
+    """
+        A function that separates the relays based on IPv6 address.
+        For each AS number, the function stores the following in JSON format:
+            - Relay fingerprints in that AS
+            - OR Address of each relay
+            - Aggregate Bandwidth
+            - Aggregate Consensus Weight Fraction
+            - Country code (in ISO2)
+        Relays that don't list their AS number will be grouped in no_as_number
+    """
+    ipv6_store = {}
+    for relay in relays:
+        if "or_addresses" in relay: # has or_addresses field
+            for address in relay["or_addresses"]:
+                res = get_ipv6_regex(address)
+                if res is not None:
+                    ipv6 = res.group(0)
+                    if ipv6 in ipv6_store:
+                        ipv6_store[ipv6]["relays"].append(relay["fingerprint"])
+                        ipv6_store[ipv6]["or_addresses"].append(relay["or_addresses"])
+                        ipv6_store[ipv6]["bandwidth"] += relay["observed_bandwidth"]
+                        ipv6_store[ipv6]["cw_fraction"] += relay["consensus_weight_fraction"]
+                        if relay.setdefault("country", "") not in ipv6_store[ipv6]["country"]:
+                            ipv6_store[ipv6]["country"].append(relay.setdefault("country", ""))
+                    else:
+                        ipv6_store[ipv6] = {
+                            "relays": [relay["fingerprint"]],
+                            "bandwidth": relay["observed_bandwidth"],
+                            "cw_fraction": relay.setdefault("consensus_weight_fraction", 0),
+                            "country": [relay.setdefault("country", "")],
+                            "or_addresses": [relay["or_addresses"]]
+                        }
+
+    return ipv6_store
+
+
+def get_ipv6_regex(address):
+    res = re.search(r'\[.*\]', address, re.IGNORECASE)
+    return res
 
 
 def store_rankings(groups):
