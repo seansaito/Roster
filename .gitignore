@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 
+# wsgi with aws credentials
+roster-tor.wsgi
+
 # Virtualenv folder
 roster/
 
