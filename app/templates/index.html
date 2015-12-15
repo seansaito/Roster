@@ -5,12 +5,14 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script src="/static/js/jquery.simplePagination.js"></script>
+	<script src="/static/js/collapse.js"></script>
+	<script src="/static/js/jquery.autocomplete.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 	<link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="/static/css/navbar.css" rel="stylesheet">
 	<link href="/static/css/simplePagination.css" rel="stylesheet">
-	<script src="/static/js/collapse.js"></script>
+	<link href="/static/css/searchbar.css" rel="stylesheet">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -22,6 +24,11 @@
 			<div class="row">
 				<div class="span12">
 					<div class="span12">
+						<div class="row">
+							<div id="searchfield">
+								<form><input type="text" name="relay" class="biginput" id="autocomplete"></form>
+							</div><!-- @end #searchfield -->
+						</div>
 						<div class="row">
 							<h2>Overview</h2>
 						</div>
@@ -147,7 +154,6 @@
 		jQuery(function($) {
 
 			var items = $("table#bandwidth_table tbody tr");
-			console.log(items);
 
 			var numItems = items.length;
 			var perPage = 10;
@@ -190,6 +196,25 @@
 			}
 		});
 
+	});
+
+	</script>
+	<script>
+	var relays = []
+	$(function() {
+		{% for relay in all_relays %}
+		relays.push({
+			value: '{{relay["fingerprint"] | safe}}' + "   (" + '{{relay["nickname"] | safe}}' + ")",
+			data: '{{relay["fingerprint"] | safe}}'
+		});
+		{% endfor %}
+		console.log(relays);
+	});
+	$("#autocomplete").autocomplete({
+		lookup: relays,
+		onSelect: function(selection) {
+			window.location.replace(window.location.href + "family_detail/" + selection.data);
+		}
 	});
 
 	</script>

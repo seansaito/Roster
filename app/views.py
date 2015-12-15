@@ -36,7 +36,21 @@ def index():
         top10_consensus = json.load(fp)
         fp.close()
 
-    return render_template("index.html", top10_bandwidth=top10_bandwidth, top10_consensus=top10_consensus)
+    bucket_key.key = "all.json"
+    all_families = []
+
+    with open(abs_paths["all"], "w+") as fp:
+        bucket_key.get_file(fp)
+        fp.seek(0)
+        all_families = json.load(fp)
+        fp.close()
+
+    all_relays = []
+    for family in all_families:
+        all_relays = all_relays + [relay for relay in family["families"]]
+
+    return render_template("index.html", top10_bandwidth=top10_bandwidth,
+        top10_consensus=top10_consensus, all_relays=all_relays)
 
 @app.route("/next_page/<parameter>/<page>")
 def next_page(parameter, page):
