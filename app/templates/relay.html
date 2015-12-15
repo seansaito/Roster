@@ -3,7 +3,6 @@
   <td style="width: 20%;"><a href="{{ url_for('family_detail', fingerprint=fingerprint) }}">{{ family["contact"][0] }}</a></th>
   <td style="width: 5%;">{{ "%.2f" | format(family["bandwidth_points"] / (1000.0 * 1000.0)) }}</td>
   <td>{{ "%.2f" | format(family["observed_bandwidth"] / (1000.0 * 1000.0)) }} MB/s</td>
-<!--  <td>#{{ family["families"][0]["fingerprint"] }}</td> -->
   <td class="text-center">{{ family["families"] | length }}</td>
   <td class="text-center">{{ family["countries"] | length }}</td>
   <td class="text-center">{{ family["exit"] }}</td>

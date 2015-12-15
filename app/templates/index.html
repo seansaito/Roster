@@ -4,10 +4,12 @@
 <!-- Bootstrap -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<script src="/static/js/jquery.simplePagination.js"></script>
 
+	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 	<link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="/static/css/navbar.css" rel="stylesheet">
+	<link href="/static/css/simplePagination.css" rel="stylesheet">
 	<script src="/static/js/collapse.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -31,11 +33,12 @@
 				</div>
 			</div>
 
-			<div class="row"  id ="bandwidth">
+			<div id="bandwidth">
+			<div class="row">
 	          <div class="span12">
 	              {%block content%}
 	              <div class="bs-example">
-	                <table class="table table-hover table-striped table-condensed" align="right">
+	                <table id="bandwidth_table" class="table table-hover table-striped table-condensed" align="right">
 	                  <thead>
                       <th>Operator</th>
 											<th style="width: 15%;">Points</th>
@@ -55,11 +58,14 @@
 	              </div>
 	          </div>
 	      </div>
+				<div class="pagination-page-bandwidth"></div>
+			</div> <!-- bandwidth -->
 
-				<div class="row" id ="consensus" style="display: none;">
+				<div id="consensus" style="display: none;">
+				<div class="row">
 							<div class="span12">
 									<div class="bs-example">
-										<table class="table table-hover table-striped table-condensed" align="right">
+										<table id="consensus_table" class="table table-hover table-striped table-condensed" align="right">
 											<thead>
 												<th>Operator</th>
 												<th>Points</th>
@@ -80,6 +86,8 @@
 									{% endblock %}
 							</div>
 					</div>
+					<div class="pagination-page-consensus"></div>
+				</div>
 
 		</div>
 	</div>
@@ -98,6 +106,92 @@
 			tableA.style.display = "none";
 			tableB.style.display = "block";
 		}
+
+		/*
+		var bandwidthPage = 1;
+		var consensusPage = 1;
+
+		$(window).scroll(function() {
+			if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+				if (tableA.style.display === "block") {
+					console.log("hit bandwidth");
+					$.ajax({
+						url: "/next_page/bandwidth/" + bandwidthPage,
+						success: function(result) {
+							var bandwidth = result["result"];
+							for (var i = 0; i < bandwidth.length; i++) {
+								console.log(bandwidth[i]);
+							}
+							console.log("done");
+						}
+					});
+					bandwidthPage += 1;
+				} else {
+					console.log("hit consensus");
+					$.ajax({
+						url: "/next_page/consensus/" + consensusPage,
+						success: function(result) {
+							var consensus = result["result"];
+							for (var i = 0; i < consensus.length; i++) {
+								console.log(consensus[i]);
+							}
+						}
+					});
+					consensusPage += 1;
+				}
+			}
+		});
+		*/
+	</script>
+	<script>
+		jQuery(function($) {
+
+			var items = $("table#bandwidth_table tbody tr");
+			console.log(items);
+
+			var numItems = items.length;
+			var perPage = 10;
+
+			items.slice(perPage).hide();
+
+			$(".pagination-page-bandwidth").pagination({
+				items: numItems,
+				itemsOnPage: perPage,
+				cssStyle: "light-theme",
+				onPageClick: function(pageNumber) {
+					var showFrom = perPage * (pageNumber - 1);
+					var showTo = showFrom + perPage;
+
+					items.hide().slice(showFrom, showTo).show();
+				}
+			});
+
+		});
+	</script>
+	<script>
+	jQuery(function($) {
+
+		var items = $("table#consensus_table tbody tr");
+
+		var numItems = items.length;
+		var perPage = 10;
+
+		items.slice(perPage).hide();
+
+		$(".pagination-page-consensus").pagination({
+			items: numItems,
+			itemsOnPage: perPage,
+			cssStyle: "light-theme",
+			onPageClick: function(pageNumber) {
+				var showFrom = perPage * (pageNumber - 1);
+				var showTo = showFrom + perPage;
+
+				items.hide().slice(showFrom, showTo).show();
+			}
+		});
+
+	});
+
 	</script>
 </body>
 </html>

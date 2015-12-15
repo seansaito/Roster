@@ -3,7 +3,7 @@
 # Imports
 from app import app
 from global_vars import *
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, jsonify
 import os, json
 
 import boto
@@ -37,6 +37,32 @@ def index():
         fp.close()
 
     return render_template("index.html", top10_bandwidth=top10_bandwidth, top10_consensus=top10_consensus)
+
+@app.route("/next_page/<parameter>/<page>")
+def next_page(parameter, page):
+    print "Called"
+    page = int(page)
+    # Connect and retrieve key from S3 bucket
+    c = boto.connect_s3(acc_key, acc_sec)
+    b = c.get_bucket(bucket)
+    bucket_key = Key(b)
+
+    bucket_key.key = "all.json"
+    families = []
+    with open(abs_paths["all"], "w+") as fp:
+        bucket_key.get_file(fp)
+        fp.seek(0)
+        families = json.load(fp)
+        fp.close()
+
+    if parameter == "bandwidth":
+        bandwidth_rankings = sorted(families, key=lambda family: family["observed_bandwidth"], reverse=True)
+        next_bandwidth = bandwidth_rankings[page*10: page*10 + 10]
+        return jsonify({"result": next_bandwidth})
+    else:
+        consensus_rankings = sorted(families, key=lambda family: family["consensus_weight_fraction"], reverse=True)
+        next_consensus = consensus_rankings[page*10: page*10 + 10]
+        return jsonify({"result": next_consensus})
 
 """
 Route for family dashboard page. Searches the json files for the given
