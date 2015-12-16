@@ -45,6 +45,13 @@
         <h4>None</h4>
       {% endif %}
     </div>
+    {% if family["eligible_for_tshirt"] %}
+    <div class="row" id="stats">
+      <h3>This operator is eligible for a <a href="https://www.torproject.org/getinvolved/tshirt.html" target="_blank">
+        Tor t-shirt!</a><span style="text-align: center;"><img src="/static/img/badges/tshirt.jpg" style="max-width: 50%; max-height: 50%;"></span></h3>
+    </div>
+    {% else %}
+    {% endif %}
   </div>
   <div class="col-md-6">
     <div class="row">
@@ -52,23 +59,23 @@
     </div>
     <div class="row" id="stats">
       <h3>Bandwidth Badge</h3>
-      <h4><span class="icon-rocket" id="{{ family['badges']['bandwidth'][1]}}"></span> {{ "%.2f" | format(family["badges"]["bandwidth"][0] * (100.0)) }} percentile</h4>
+      <h4><span class="icon-rocket {{ family['badges']['bandwidth'][1]}}"></span> {{ "%.2f" | format(family["badges"]["bandwidth"][0] * (100.0)) }} percentile</h4>
     </div>
     <div class="row" id="stats">
       <h3>Exit Bandwidth Badge</h3>
-      <h4><span class="icon-exit" id= "{{ family['badges']['exit_bandwidth'][1]}}"></span> {{ "%.2f" | format(family["badges"]["exit_bandwidth"][0] * (100.0)) }} percentile</h4>
+      <h4><span class="icon-exit {{ family['badges']['exit_bandwidth'][1]}}"></span> {{ "%.2f" | format(family["badges"]["exit_bandwidth"][0] * (100.0)) }} percentile</h4>
     </div>
     <div class="row" id="stats">
       <h3>Consensus Weight Badge</h3>
-      <h4><span class="icon-tree" id="{{ family['badges']['consensus_weight'][1]}}"></span> {{ "%.2f" | format(family["badges"]["consensus_weight"][0] * (100.0)) }} percentile</h4>
+      <h4><span class="icon-tree {{ family['badges']['consensus_weight'][1]}}"></span> {{ "%.2f" | format(family["badges"]["consensus_weight"][0] * (100.0)) }} percentile</h4>
     </div>
     <div class="row" id="stats">
       <h3>Number of Countries</h3>
-      <h4><span class="icon-earth" id="{{ family['badges']['num_countries'][1]}}"></span> {{ family["badges"]["num_countries"][0] }} countries</h4>
+      <h4><span class="icon-earth {{ family['badges']['num_countries'][1]}}"></span> {{ family["badges"]["num_countries"][0] }} countries</h4>
     </div>
     <div class="row" id="stats">
       <h3>Number of Relays</h3>
-      <h4><span class="icon-road" id="{{ family['badges']['num_relays'][1]}}"></span> {{ family["badges"]["num_relays"][0] }} relays</h4>
+      <h4><span class="icon-road {{ family['badges']['num_relays'][1]}}"></span> {{ family["badges"]["num_relays"][0] }} relays</h4>
     </div>
     <div class="row" id="stats">
       <h3>Has Contact For At Least Half of Relays</h3>
@@ -105,14 +112,3 @@
 
   </div>
 </div>
-
-{% if family["eligible_for_tshirt"] %}
-
-<div class="row">
-  <div class="col-md-6 col-sm-offset-3 text-center">
-    <h3>This operator is eligible for a <a href="https://www.torproject.org/getinvolved/tshirt.html" target="_blank">
-      Tor t-shirt!</a><span><img src="/static/img/badges/tshirt.jpg" style="max-width: 50%; max-height: 50%;"></span></h3>
-  </div>
-</div>
-{% else %}
-{% endif %}

@@ -1,5 +1,6 @@
 <tr>
   {% set fingerprint = family["families"][0]["fingerprint"] %}
+  <td class="text-center">{{ rank_consensus }}</td>
   <td style="width: 20%;"><a href="{{ url_for('family_detail', fingerprint=fingerprint) }}">{{ family["contact"][0] }}</a></th>
   <td>{{ "%.2f" | format(family["consensus_points"]) }}</td>
   <td class="text-center" style="width: 20%;">{{ family["consensus_weight"]}} ({{ "%.3f" | format(family["consensus_weight_fraction"] * 100) }}%)</td>

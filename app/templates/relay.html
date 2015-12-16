@@ -1,5 +1,6 @@
 <tr>
   {% set fingerprint = family["families"][0]["fingerprint"] %}
+  <td class="text-center">{{ rank }}</td>
   <td style="width: 20%;"><a href="{{ url_for('family_detail', fingerprint=fingerprint) }}">{{ family["contact"][0] }}</a></th>
   <td style="width: 5%;">{{ "%.2f" | format(family["bandwidth_points"] / (1000.0 * 1000.0)) }}</td>
   <td>{{ "%.2f" | format(family["observed_bandwidth"] / (1000.0 * 1000.0)) }} MB/s</td>

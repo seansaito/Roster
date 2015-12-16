@@ -194,7 +194,7 @@ class FamilyAggregator(object):
 
                 family["families"] = sorted(family["families"], key=lambda relay: relay["observed_bandwidth"], reverse=True)
                 family["bandwidth_points"] = family["observed_bandwidth"] + family["observed_bandwidth"] * family["exit_probability"]
-                family["consensus_points"] = family["consensus_weight"] * family["exit_probability"]
+                family["consensus_points"] = family["consensus_weight"] + 1200 * family["exit_probability"]
                 family["contact"] = sorted(family["contact"])
 
                 families.append(family)
