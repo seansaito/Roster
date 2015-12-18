@@ -179,36 +179,81 @@ def group_by_ipv6(relays):
             - Country code (in ISO2)
         Relays that don't list their AS number will be grouped in no_as_number
     """
-    ipv6_store = {}
+    ipv6_store = []
     for relay in relays:
         if "or_addresses" in relay: # has or_addresses field
             for address in relay["or_addresses"]:
                 res = get_ipv6_regex(address)
                 if res is not None:
-                    ipv6 = res.group(0)
-                    if ipv6 in ipv6_store:
-                        ipv6_store[ipv6]["relays"].append(relay["fingerprint"])
-                        ipv6_store[ipv6]["or_addresses"].append(relay["or_addresses"])
-                        ipv6_store[ipv6]["bandwidth"] += relay["observed_bandwidth"]
-                        ipv6_store[ipv6]["cw_fraction"] += relay["consensus_weight_fraction"]
-                        if relay.setdefault("country", "") not in ipv6_store[ipv6]["country"]:
-                            ipv6_store[ipv6]["country"].append(relay.setdefault("country", ""))
-                    else:
-                        ipv6_store[ipv6] = {
-                            "relays": [relay["fingerprint"]],
-                            "bandwidth": relay["observed_bandwidth"],
-                            "cw_fraction": relay.setdefault("consensus_weight_fraction", 0),
-                            "country": [relay.setdefault("country", "")],
-                            "or_addresses": [relay["or_addresses"]]
-                        }
+                    ipv6, str_len = res.group(0), len(res.group(0))
+                    ipv6 = ipv6[1:str_len-1]
+                    info = {
+                        "ipv6_address": ipv6,
+                        "fingerprint": relay["fingerprint"],
+                        "bandwidth": relay["observed_bandwidth"],
+                        "cw_fraction": relay["consensus_weight_fraction"],
+                        "as_number": relay.setdefault("as_number", ""),
+                        "country": relay.setdefault("country", "")
+                    }
+                    ipv6_store.append(info)
+
+                    # if ipv6 in ipv6_store:
+                    #     ipv6_store[ipv6]["relays"].append(relay["fingerprint"])
+                    #     ipv6_store[ipv6]["or_addresses"].append(relay["or_addresses"])
+                    #     ipv6_store[ipv6]["bandwidth"] += relay["observed_bandwidth"]
+                    #     ipv6_store[ipv6]["cw_fraction"] += relay["consensus_weight_fraction"]
+                    #     if relay.setdefault("country", "") not in ipv6_store[ipv6]["country"]:
+                    #         ipv6_store[ipv6]["country"].append(relay.setdefault("country", ""))
+                    # else:
+                    #     ipv6_store[ipv6] = {
+                    #         "relays": [relay["fingerprint"]],
+                    #         "bandwidth": relay["observed_bandwidth"],
+                    #         "cw_fraction": relay.setdefault("consensus_weight_fraction", 0),
+                    #         "country": [relay.setdefault("country", "")],
+                    #         "or_addresses": [relay["or_addresses"]]
+                    #     }
 
     return ipv6_store
 
+def group_by_ipv4(relays):
+    """
+    Same as group_by_ipv6, but with ipv4 for each dictionary entry
+    """
+    ipv4_store = []
+    for relay in relays:
+        if "or_addresses" in relay:
+            """ First entry is the ipv4 address """
+            ipv4 = relay["or_addresses"][0][:relay["or_addresses"][0].index(":")] # remove port number
+            info = {
+                "ipv4_address": ipv4,
+                "fingerprint": relay["fingerprint"],
+                "bandwidth": relay["observed_bandwidth"],
+                "cw_fraction": relay["consensus_weight_fraction"],
+                "as_number": relay.setdefault("as_number", ""),
+                "country": relay.setdefault("country", "")
+            }
+            ipv4_store.append(info)
+
+            # if ipv4 in ipv4_store:
+            #     ipv4_store[ipv4]["relays"].append(relay["fingerprint"])
+            #     ipv4_store[ipv4]["or_addresses"].append(relay["or_addresses"])
+            #     ipv4_store[ipv4]["bandwidth"] += relay["observed_bandwidth"]
+            #     ipv4_store[ipv4]["cw_fraction"] += relay["consensus_weight_fraction"]
+            #     if relay.setdefault("country", "") not in ipv4_store[ipv4]["country"]:
+            #         ipv4_store[ipv4]["country"].append(relay.setdefault("country", ""))
+            # else:
+            #     ipv4_store[ipv4] = {
+            #         "relays": [relay["fingerprint"]],
+            #         "bandwidth": relay["observed_bandwidth"],
+            #         "cw_fraction": relay.setdefault("consensus_weight_fraction", 0),
+            #         "country": [relay.setdefault("country", "")],
+            #         "or_addresses": [relay["or_addresses"]]
+            #     }
+    return ipv4_store
 
 def get_ipv6_regex(address):
     res = re.search(r'\[.*\]', address, re.IGNORECASE)
     return res
-
 
 def store_rankings(groups):
     rankings = {"top10_bandwidth": groups["bandwidth_top10"],
