@@ -23,48 +23,7 @@
        right: 0;
      }
    </style>
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-  <script>
-    var map;
-    function initialize() {
-     var mapOptions = {
-       zoom: 2,
-       center: new google.maps.LatLng(25, 0)
-     };
-
-     map = new google.maps.Map(document.getElementById('map-canvas'),
-         mapOptions);
-
-      {% set counter = 1 %}
-      {% for marker in markers.keys() %}
-        var marker{{ counter }} = new google.maps.Marker({
-          position: new google.maps.LatLng({{ marker[0] }}, {{ marker[1] }}),
-          map: map
-        })
-
-        var contentString = "<div id='container'><h4>Relays: {{ markers[marker] | length }}</h4>";
-        {% for relay in markers[marker] %}
-          contentString = contentString + "<p>{{ relay }}</p>";
-        {% endfor %}
-        contentString = contentString + "</div>";
-
-        console.log(contentString);
-
-        var infoWindow{{ counter }} = new google.maps.InfoWindow({
-          content: contentString
-        });
-
-        google.maps.event.addListener(marker{{ counter }}, "click", function() {
-          infoWindow{{counter}}.open(map, marker{{ counter }});
-        });
-
-        {% set counter = counter + 1 %}
-
-      {% endfor %}
-    }
-
-    google.maps.event.addDomListener(window, 'load', initialize);
-  </script>
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script> -->
 
   <script type="text/javascript">
     var relays = document.getElementById("relays");
@@ -86,7 +45,11 @@
       <div class="row" style="margin:2%;">
           <h2>{{ family["contact"][0] }}</h2>
       </div>
-      <div id="map-canvas" style="position:relative;"></div>
+
+      <!-- <div id="map-canvas" style="position:relative;"></div> -->
+
+      <iframe src="http://map.torservers.net/iframe.html?family={{family['families'][0]['fingerprint']}}" height="94%" width="95%" style="border:0;"></iframe>
+
       {% include "family_badges_and_stats.html" %}
 
       <div class="row" style="margin:2%;">
