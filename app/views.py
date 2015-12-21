@@ -49,6 +49,9 @@ def index():
     for family in all_families:
         all_relays = all_relays + [relay for relay in family["families"]]
 
+    # Lastly, reset the files for proper file tracking
+    reset_files()
+
     return render_template("index.html", top10_bandwidth=top10_bandwidth,
         top10_consensus=top10_consensus, all_relays=all_relays)
 
@@ -111,6 +114,13 @@ def find_family(fingerprint):
 
     return theOne
 
+def reset_files():
+    """ Function to make sure local copy of json files are blank """
+    for key in ["top10_bandwidth", "top10_consensus", "all"]:
+        fp = open(abs_paths[key], "w+")
+        fp.close()
+    return
+
 @app.route("/family_detail/<fingerprint>", methods=["GET", "POST"])
 def family_detail(fingerprint):
     """
@@ -137,6 +147,9 @@ def family_detail(fingerprint):
                 markers[(relay["latitude"], relay["longitude"])].append(relay["fingerprint"])
             else:
                 markers[(relay["latitude"], relay["longitude"])] = [relay["fingerprint"]]
+
+    # Reset the json files
+    reset_files()
 
     return render_template("family_detail.html", family=theOne, markers=markers)
 
