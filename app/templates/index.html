@@ -4,6 +4,7 @@
 <!-- Bootstrap -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 	<script src="/static/js/jquery.simplePagination.js"></script>
 	<script src="/static/js/collapse.js"></script>
 	<script src="/static/js/jquery.autocomplete.js"></script>
@@ -32,9 +33,11 @@
 						<div class="row">
 							<h2>Overview</h2>
 						</div>
-						<div class="row">
-							<input type="button" id="showBandwidth" value="Bandwidth">
-							<input type="button" id="showConsensus" value="Consensus Weight">
+						<div class="nav row" id="tab-nav">
+							<ul class="nav nav-tabs">
+							  <li class="active" id="showBandwidth"><a href="#">Bandwidth</a></li>
+							  <li id="showConsensus"><a href="#">Consensus</a></li>
+							</ul>
 						</div>
 					</div>
 				</div>
@@ -68,7 +71,7 @@
 	              </div>
 	          </div>
 	      </div>
-				<div class="pagination-page-bandwidth"></div>
+				<div class="pagination-page-bandwidth" style="padding-bottom: 100px;"></div>
 			</div> <!-- bandwidth -->
 
 				<div id="consensus" style="display: none;">
@@ -114,10 +117,14 @@
 		btnTabA.onclick = function () {
 			tableA.style.display = "block";
 			tableB.style.display = "none";
+			btnTabA.className = "active";
+			btnTabB.className = "";
 		}
 		btnTabB.onclick = function () {
 			tableA.style.display = "none";
 			tableB.style.display = "block";
+			btnTabA.className = "";
+			btnTabB.className = "active";
 		}
 
 	</script>

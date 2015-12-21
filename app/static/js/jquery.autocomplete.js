@@ -34,7 +34,7 @@
                 createNode: function (containerClass) {
                     var div = document.createElement('div');
                     div.className = containerClass;
-                    div.style.position = 'absolute';
+                    div.style.position = 'relative';
                     div.style.display = 'none';
                     return div;
                 }
@@ -62,7 +62,7 @@
                 lookup: null,
                 onSelect: null,
                 width: 'auto',
-                minChars: 1,
+                minChars: 3,
                 maxHeight: 300,
                 deferRequestBy: 0,
                 params: {},
@@ -131,7 +131,7 @@
         if (!currentValue) {
             return suggestion.value;
         }
-        
+
         var pattern = '(' + utils.escapeRegExChars(currentValue) + ')';
 
         return suggestion.value
@@ -224,7 +224,7 @@
         onBlur: function () {
             this.enableKillerFn();
         },
-        
+
         abortAjax: function () {
             var that = this;
             if (that.currentRequest) {
@@ -357,7 +357,7 @@
                     that.el.val(that.currentValue);
                     that.hide();
                 }
-                
+
                 that.stopKillSuggestions();
             }, 50);
         },
