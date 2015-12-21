@@ -78,13 +78,11 @@ def next_page(parameter, page):
         next_consensus = consensus_rankings[page*10: page*10 + 10]
         return jsonify({"result": next_consensus})
 
-"""
-Route for family dashboard page. Searches the json files for the given
-fingerprint. Search for relays are redirected here.
-"""
-@app.route("/family_detail/<fingerprint>", methods=["GET", "POST"])
-def family_detail(fingerprint):
-    # Again, connect to S3 to get fetch latest json files
+def find_family(fingerprint):
+    """
+    Finds a family from the json files based on fingerprint
+    """
+    # Fetch latest json files from S3
     c = boto.connect_s3(acc_key, acc_sec)
     b = c.get_bucket(bucket)
     bucket_key = Key(b)
@@ -110,6 +108,16 @@ def family_detail(fingerprint):
 
         if theOne != "":
             break
+
+    return theOne
+
+@app.route("/family_detail/<fingerprint>", methods=["GET", "POST"])
+def family_detail(fingerprint):
+    """
+    Route for family dashboard page. Searches the json files for the given
+    fingerprint. Search for relays are redirected here.
+    """
+    theOne = find_family(fingerprint)
 
     # Family is not found, so return 404 page
     if theOne == "":
