@@ -50,7 +50,15 @@ class RelayStatsAggregator(object):
 
     def get_exit_bandwidth_percentile(self, fingerprint):
         family, counter = self.find_by_fingerprint(fingerprint, self.exit_bandwidth_rankings)
-        return self.get_badge(counter)
+        percentile = float(self.num_relays - counter) / float(self.num_relays)
+        if percentile < 0.94:
+            return (percentile, "None")
+        elif percentile < 0.95:
+            return (percentile, "bronze")
+        elif percentile < 0.97:
+            return (percentile, "gold")
+        else:
+            return (percentile, "platinum")
 
     def get_cw_percentile(self, fingerprint):
         family, counter = self.find_by_fingerprint(fingerprint, self.consensus_weight_rankings)
