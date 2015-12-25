@@ -5,6 +5,10 @@ __pycache__/
 # wsgi with aws credentials
 roster-tor.wsgi
 
+# static files
+app/static/json/
+app/static/csv/
+
 # Virtualenv folder
 roster/
 
