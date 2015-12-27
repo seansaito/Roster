@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Imports
+### Imports ###
 from app import app
 from global_vars import *
 from flask import render_template, redirect, url_for, request, jsonify
@@ -9,10 +9,31 @@ import os, json
 import boto
 from boto.s3.key import Key
 
+from global_vars import static_store_strategy
+
 @app.route("/", methods=["GET"])
 def index():
-    # First update the bandwidth and cw rankings using the files from S3
+    # Check static_store_strategy. If local, then no need to connect to S3
+    if static_store_strategy == "LOCAL":
+        print "GET /   Going local strategy"
+        data_store = [[],[],[]]
+        file_pairs = [(0, "top10_bandwidth"), (1, "top10_consensus"), (2, "all")]
+        for store_index, file_name in file_pairs:
+            fp = open(abs_paths[file_name], "r")
+            data_store[store_index] = json.load(fp)
+            fp.close()
 
+        # Unpack the families into individual relays
+        all_relays = []
+        for family in data_store[2]:
+            all_relays = all_relays + [relay for relay in family["families"]]
+
+        data_store[2] = all_relays
+
+        return render_template("index.html", top10_bandwidth=data_store[0],
+            top10_consensus=data_store[1], all_relays=data_store[2])
+
+    # First update the bandwidth and cw rankings using the files from S3
     # Connect and retrieve key from S3 bucket
     c = boto.connect_s3(acc_key, acc_sec)
     b = c.get_bucket(bucket)
@@ -50,41 +71,37 @@ def index():
         all_relays = all_relays + [relay for relay in family["families"]]
 
     # Lastly, reset the files for proper file tracking
-    reset_files()
+    # reset_files()
 
     return render_template("index.html", top10_bandwidth=top10_bandwidth,
         top10_consensus=top10_consensus, all_relays=all_relays)
-
-@app.route("/next_page/<parameter>/<page>")
-def next_page(parameter, page):
-    print "Called"
-    page = int(page)
-    # Connect and retrieve key from S3 bucket
-    c = boto.connect_s3(acc_key, acc_sec)
-    b = c.get_bucket(bucket)
-    bucket_key = Key(b)
-
-    bucket_key.key = "all.json"
-    families = []
-    with open(abs_paths["all"], "w+") as fp:
-        bucket_key.get_file(fp)
-        fp.seek(0)
-        families = json.load(fp)
-        fp.close()
-
-    if parameter == "bandwidth":
-        bandwidth_rankings = sorted(families, key=lambda family: family["observed_bandwidth"], reverse=True)
-        next_bandwidth = bandwidth_rankings[page*10: page*10 + 10]
-        return jsonify({"result": next_bandwidth})
-    else:
-        consensus_rankings = sorted(families, key=lambda family: family["consensus_weight_fraction"], reverse=True)
-        next_consensus = consensus_rankings[page*10: page*10 + 10]
-        return jsonify({"result": next_consensus})
 
 def find_family(fingerprint):
     """
     Finds a family from the json files based on fingerprint
     """
+    # If static_store_strategy is LOCAL, then just lookup local files
+    if static_store_strategy == "LOCAL":
+        print "[find_family] Going local strategy"
+        theOne = ""
+        for key in ["top10_bandwidth.json", "top10_consensus.json", "all.json"]:
+            array_store = []
+
+            with open(abs_paths[key[:-5]], "r") as fp:
+                array_store = json.load(fp)
+                fp.close()
+
+            for family in array_store:
+                for relay in family["families"]:
+                    if relay["fingerprint"] == fingerprint:
+                        theOne = family
+                        break
+
+            if theOne != "":
+                break
+
+        return theOne
+
     # Fetch latest json files from S3
     c = boto.connect_s3(acc_key, acc_sec)
     b = c.get_bucket(bucket)
@@ -149,7 +166,7 @@ def family_detail(fingerprint):
                 markers[(relay["latitude"], relay["longitude"])] = [relay["fingerprint"]]
 
     # Reset the json files
-    reset_files()
+    # reset_files()
 
     return render_template("family_detail.html", family=theOne, markers=markers)
 

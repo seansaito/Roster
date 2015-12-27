@@ -319,6 +319,8 @@ if __name__ == "__main__":
     # Stores bandwidth rankings, consensus_weight rankings, all.json
     store_rankings(groups)
 
-    # Uploads the data and stats to AWS S3
-    from upload import *
-    map(upload, assets)
+    if static_store_strategy != "LOCAL":
+        # Uploads the data and stats to AWS S3
+        print "[relay_rank] Uploading to S3"
+        from upload import *
+        map(upload, assets)
