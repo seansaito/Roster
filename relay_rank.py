@@ -312,9 +312,9 @@ if __name__ == "__main__":
     groups["exit_bandwidth_rankings"] = sorted(families, key=lambda family: family["exit_bandwidth"], reverse=True)
 
     # These are used for the index page
-    groups["bandwidth_top10"] = groups["bandwidth_rankings"][:100]
-    groups["consensus_top10"] = groups["consensus_rankings"][:100]
-    groups["exit_bandwidth_top10"] = groups["exit_bandwidth_rankings"][:100]
+    groups["bandwidth_top10"] = groups["bandwidth_rankings"][:320]
+    groups["consensus_top10"] = groups["consensus_rankings"][:320]
+    groups["exit_bandwidth_top10"] = groups["exit_bandwidth_rankings"][:320]
 
     # Stores bandwidth rankings, consensus_weight rankings, all.json
     store_rankings(groups)

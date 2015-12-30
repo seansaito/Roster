@@ -134,7 +134,7 @@
 			var items = $("table#bandwidth_table tbody tr");
 
 			var numItems = items.length;
-			var perPage = 10;
+			var perPage = 32;
 
 			items.slice(perPage).hide();
 
@@ -153,12 +153,16 @@
 		});
 	</script>
 	<script>
+	/*
+	For pagination of the tables
+	*/
+
 	jQuery(function($) {
 
 		var items = $("table#consensus_table tbody tr");
 
 		var numItems = items.length;
-		var perPage = 10;
+		var perPage = 32;
 
 		items.slice(perPage).hide();
 
