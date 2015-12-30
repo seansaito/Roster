@@ -49,3 +49,10 @@ class OnionooConnector(object):
         for relay in relays:
             if relay["fingerprint"] == fingerprint:
                 return relay
+
+    def dictify_relays(self, relays):
+        """ Turn a list of relays into a dict for easy retrieval """
+        res = {}
+        for relay in relays:
+            res[relay["fingerprint"]] = relay
+        return res

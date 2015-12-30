@@ -168,6 +168,75 @@ def group_by_AS(relays):
 
     return grouped_AS_stats
 
+def dictify_relays(relays):
+    """ Turn a list of relays into a dict for easy retrieval """
+    res = {}
+    for relay in relays:
+        res[relay["fingerprint"]] = relay
+    return res
+
+def group_by_AS_without_guard_exit(relays):
+    """
+    Same as group_by_AS, but only for ASes that have neither guard or exit relays
+    All we have to do is prune the list fo relays to include only middle relays
+    """
+    grouped_AS_stats = group_by_AS(relays)
+
+    # For searching relays
+    dict_relays = dictify_relays(relays)
+
+    pruned_group = {}
+
+    for key, value in grouped_AS_stats.items():
+        if key != "no_as_number":
+            if no_exit_or_guard(value["relays"], dict_relays):
+                pruned_group[key] = value
+
+    return pruned_group
+
+def no_exit_or_guard(fingerprints, dict_relays):
+    """ Helper function for getting ASes with no guard/exit relays """
+    for fingerprint in fingerprints:
+        relay = dict_relays[fingerprint]
+        if "Guard" in relay["flags"] or "Exit" in relay["flags"]:
+            return False
+    return True
+
+def get_AS_cardinality(grouped_AS_stats):
+    """
+    A function that takes a dictionary of grouped_AS_stats and sorts based
+    on number of relays in each AS.
+
+    It excludes no_as_number
+
+    Parameters:
+        grouped_AS_stats (dict)     : Dictionary which keys are the AS numbers
+    Returns:
+        An OrderedDict of the as_numbers, the values of each key being the cardinality
+        of relays
+    """
+    temp = {}
+    for key, value in grouped_AS_stats.items():
+        if key != "no_as_number":
+            temp[key] = len(value["relays"])
+
+    as_cardinalities = OrderedDict(sorted(temp.items(), key=lambda t: t[1], reverse=True))
+
+    return as_cardinalities
+
+def get_AS_cw_aggregate(grouped_AS_stats):
+    """
+    Same as above, but sort by total cw weight
+    """
+    temp = {}
+    for key, value in grouped_AS_stats.items():
+        if key != "no_as_number":
+            temp[key] = value["cw_fraction"]
+
+    as_cw_aggregate = OrderedDict(sorted(temp.items(), key=lambda t: t[1], reverse=True))
+
+    return as_cw_aggregate
+
 def group_by_ipv6(relays):
     """
         A function that separates the relays based on IPv6 address.
@@ -289,7 +358,7 @@ if __name__ == "__main__":
     groups["families"] = families
     groups["relays"] = relays
 
-    # Get rankings and stats
+    # Get rankings and stats of entire network
     groups["bandwidth_rankings"] = sorted(families, key=lambda family: family["observed_bandwidth"], reverse=True)
     groups["consensus_rankings"] = sorted(families, key=lambda family: family["consensus_weight_fraction"], reverse=True)
     groups["exit_bandwidth_rankings"] = sorted(families, key=lambda family: family["exit_bandwidth"], reverse=True)
