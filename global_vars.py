@@ -8,7 +8,7 @@ acc_sec = os.environ["AWS_SECRET_KEY"]
 bucket = os.environ["AWS_BUCKET"]
 
 # Switch for storing static files locally or uploading to S3
-# The value must be either "LOCAL" or "S3"
+# The value must be either "LOCAL" or "REMOTE"
 static_store_strategy = os.environ["ROSTER_STATIC_STRATEGY"]
 
 # Script directory

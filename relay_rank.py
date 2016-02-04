@@ -20,12 +20,12 @@ import re
 
 from global_vars import *
 
-"""
-    This function takes an array of relays and records two statistics w.r.t. countries:
+def record_country_stats(relays):
+    """
+        This function takes an array of relays and records two statistics w.r.t. countries:
         - Distribution of physical relays for each country
         - Distribution of consensus weight for each country
-"""
-def record_country_stats(relays):
+    """
     print "[record_country_stats] Recording country stats"
 
     # Paths
@@ -49,17 +49,18 @@ def record_country_stats(relays):
             cw_fraction[relay["country"].upper()] += relay.setdefault("consensus_weight_fraction", 0)
 
     # First overwrite csv file using the one in s3
-    c = boto.connect_s3(acc_key, acc_sec)
-    b = c.get_bucket(bucket)
-    bucket_key = Key(b)
-
-    bucket_key.key = "country_relay_count.csv"
-    bucket_key.get_contents_to_filename(relay_count_path)
-    b.set_acl("public-read", "country_relay_count.csv")
-
-    bucket_key.key = "country_cw_fraction.csv"
-    bucket_key.get_contents_to_filename(cw_fraction_path)
-    b.set_acl("public-read", "country_cw_fraction.csv")
+    # TODO no need to connect to S3
+    # c = boto.connect_s3(acc_key, acc_sec)
+    # b = c.get_bucket(bucket)
+    # bucket_key = Key(b)
+    #
+    # bucket_key.key = "country_relay_count.csv"
+    # bucket_key.get_contents_to_filename(relay_count_path)
+    # b.set_acl("public-read", "country_relay_count.csv")
+    #
+    # bucket_key.key = "country_cw_fraction.csv"
+    # bucket_key.get_contents_to_filename(cw_fraction_path)
+    # b.set_acl("public-read", "country_cw_fraction.csv")
 
     # Write data for each stat
     time = "-".join(datetime.datetime.strftime(datetime.datetime.now(), "%Y, %m, %d, %H, %M, %S").split(", "))
@@ -72,6 +73,33 @@ def record_country_stats(relays):
     print "[record_country_stats] End record_country_stats"
     return (relay_count, cw_fraction)
 
+def record_country_stats_json(relays):
+    """
+        Same as record_country_stats, but returns data for storing json rather than
+        csv. Is used for getting the country stats for guard and exit relays
+    """
+    print "[record_country_stats_json] Recording country stats in json form"
+    # dicts which store number of relays/cw fraction in each country
+    relay_count = {}
+    cw_fraction = {}
+
+    # Initialize
+    for country in pycountry.countries:
+        relay_count[country.alpha2] = 0
+        cw_fraction[country.alpha2] = 0
+
+    # First store data in dict
+    for relay in relays:
+        if "country" in relay:
+            relay_count[relay["country"].upper()] += 1
+            cw_fraction[relay["country"].upper()] += relay.setdefault("consensus_weight_fraction", 0)
+
+    print "[record_country_stats_json] end function"
+
+    return {
+        "relay_count": OrderedDict(sorted(relay_count.items(), key=lambda item: item[1], reverse=True)),
+        "cw_fraction": OrderedDict(sorted(cw_fraction.items(), key=lambda item: item[1], reverse=True))
+    }
 
 # Helper functions for record_port_stats
 def parse_between(string):
@@ -202,6 +230,23 @@ def no_exit_or_guard(fingerprints, dict_relays):
             return False
     return True
 
+def group_by_exit_and_guard(relays):
+    """
+    Creates two files - AS stats aggregated for exit relays and guard relays
+    """
+    exit_relays = [relay for relay in relays if "Exit" in relay["flags"]]
+    guard_relays = [relay for relay in relays if "Guard" in relay["flags"]]
+    exit_as_stats = group_by_AS(exit_relays)
+    guard_as_stats = group_by_AS(guard_relays)
+
+    exit_json, guard_json = "exit_as_stats.json", "guard_as_stats.json"
+    for filename, json_store in [(exit_json, exit_as_stats), (guard_json, guard_as_stats)]:
+        fp = open(filename, "w+")
+        fp.write(json.dumps(json_store))
+        fp.close()
+
+    return
+
 def get_AS_cardinality(grouped_AS_stats):
     """
     A function that takes a dictionary of grouped_AS_stats and sorts based
@@ -266,22 +311,6 @@ def group_by_ipv6(relays):
                     }
                     ipv6_store.append(info)
 
-                    # if ipv6 in ipv6_store:
-                    #     ipv6_store[ipv6]["relays"].append(relay["fingerprint"])
-                    #     ipv6_store[ipv6]["or_addresses"].append(relay["or_addresses"])
-                    #     ipv6_store[ipv6]["bandwidth"] += relay["observed_bandwidth"]
-                    #     ipv6_store[ipv6]["cw_fraction"] += relay["consensus_weight_fraction"]
-                    #     if relay.setdefault("country", "") not in ipv6_store[ipv6]["country"]:
-                    #         ipv6_store[ipv6]["country"].append(relay.setdefault("country", ""))
-                    # else:
-                    #     ipv6_store[ipv6] = {
-                    #         "relays": [relay["fingerprint"]],
-                    #         "bandwidth": relay["observed_bandwidth"],
-                    #         "cw_fraction": relay.setdefault("consensus_weight_fraction", 0),
-                    #         "country": [relay.setdefault("country", "")],
-                    #         "or_addresses": [relay["or_addresses"]]
-                    #     }
-
     return ipv6_store
 
 def group_by_ipv4(relays):
@@ -303,26 +332,66 @@ def group_by_ipv4(relays):
             }
             ipv4_store.append(info)
 
-            # if ipv4 in ipv4_store:
-            #     ipv4_store[ipv4]["relays"].append(relay["fingerprint"])
-            #     ipv4_store[ipv4]["or_addresses"].append(relay["or_addresses"])
-            #     ipv4_store[ipv4]["bandwidth"] += relay["observed_bandwidth"]
-            #     ipv4_store[ipv4]["cw_fraction"] += relay["consensus_weight_fraction"]
-            #     if relay.setdefault("country", "") not in ipv4_store[ipv4]["country"]:
-            #         ipv4_store[ipv4]["country"].append(relay.setdefault("country", ""))
-            # else:
-            #     ipv4_store[ipv4] = {
-            #         "relays": [relay["fingerprint"]],
-            #         "bandwidth": relay["observed_bandwidth"],
-            #         "cw_fraction": relay.setdefault("consensus_weight_fraction", 0),
-            #         "country": [relay.setdefault("country", "")],
-            #         "or_addresses": [relay["or_addresses"]]
-            #     }
     return ipv4_store
 
 def get_ipv6_regex(address):
+    """
+    Finds the ipv6 (ignoring the port)
+    from the relay's or_address field
+    """
     res = re.search(r'\[.*\]', address, re.IGNORECASE)
     return res
+
+def group_by_AS_org_id(relays):
+    """
+    This function takes the json file "as2orgname.json" and computes
+    a histogram for each AS organization id/name
+
+    The resulting dictionary would be used to award points and badges to relays
+    which point to rare AS organizations.
+    """
+    print "[group_by_AS_org_id] Grouping by AS org_id"
+    result_file = "app/static/json/as_2_org_histogram.json"
+
+    result_store = {
+        "as_2_org": {},
+        "org_2_hist": {}
+    }
+
+    as2org_store = {}
+    with open("as2orgname.json", "r") as fp:
+        as2org_store = json.load(fp)
+        fp.close()
+
+    # now populate the result_store with the org_ids
+    result_store["as_2_org"] = as2org_store
+
+    # Initialize the org_2_hist with each org_id mapped to zero
+    org_ids = [item[1][0] for item in as2org_store.items()]
+
+    for org_id in org_ids:
+        if org_id not in result_store["org_2_hist"]:
+            result_store["org_2_hist"][org_id] = 0
+
+    # Now loop through relays and create histogram
+    for relay in relays:
+        if "as_number" in relay:
+            as_number = relay["as_number"][2:]
+            if as_number in result_store["as_2_org"]:
+                org_id = result_store["as_2_org"][as_number][0]
+                result_store["org_2_hist"][org_id] += 1
+            else:
+                org_id = "Unknown/AS" + str(as_number)
+                result_store["as_2_org"][as_number] = (org_id, org_id)
+                result_store["org_2_hist"][org_id] = 1
+
+    with open(result_file, "w+") as fp:
+        fp.write(json.dumps(result_store))
+        fp.close()
+
+    print "[group_by_AS_org_id] End function"
+
+    return result_store
 
 def store_rankings(groups):
     rankings = {"top10_bandwidth": groups["bandwidth_top10"],
@@ -340,6 +409,8 @@ def store_rankings(groups):
 if __name__ == "__main__":
     groups = {"families": [],
               "relays": [],
+              "exit_relays": [],
+              "guard_relays": [],
               "bandwidth_rankings": [],
               "bandwidth_top10": [],
               "consensus_rankings": [],
@@ -348,29 +419,46 @@ if __name__ == "__main__":
               "exit_bandwidth_top10": [],
               "country_count_rankings": [],
               "country_cw_rankings": [],
-              "port_rankings": []
+              "country_exit_rankings": {},
+              "country_guard_rankings": {},
+              "port_rankings": [],
+              "org_histogram": {}
              }
 
     aggregator = FamilyAggregator()
     families = aggregator.families
     relays = aggregator.relays
+    exit_relays = [relay for relay in relays if "Exit" in relay["flags"]]
+    guard_relays = [relay for relay in relays if "Guard" in relay["flags"]]
 
     groups["families"] = families
     groups["relays"] = relays
+    groups["exit_relays"] = exit_relays
+    groups["guard_relays"] = guard_relays
 
     # Get rankings and stats of entire network
     groups["bandwidth_rankings"] = sorted(families, key=lambda family: family["observed_bandwidth"], reverse=True)
     groups["consensus_rankings"] = sorted(families, key=lambda family: family["consensus_weight_fraction"], reverse=True)
     groups["exit_bandwidth_rankings"] = sorted(families, key=lambda family: family["exit_bandwidth"], reverse=True)
     groups["country_count_rankings"], groups["country_cw_rankings"] = record_country_stats(relays)
+    groups["country_exit_rankings"] = record_country_stats_json(exit_relays)
+    groups["country_exit_ordered_by_relay_count"] = sorted([ (country, count) for country, count in groups["country_exit_rankings"].items() if count != 0 ], key=lambda item: item[1])
+    groups["country_guard_rankings"] = record_country_stats_json(guard_relays)
+    groups["country_guard_ordered_by_relay_count"] = sorted([ (country, count) for country, count in groups["country_guard_rankings"].items() if count != 0 ], key=lambda item: item[1])
     groups["port_rankings"] = record_port_stats(relays)
+    groups["org_exit_histogram"] = group_by_AS_org_id(exit_relays)
+    groups["org_exit_ordered"] = sorted( [(org_id, count) for org_id, count in groups["org_exit_histogram"]["org_2_hist"].items() if count != 0], key=lambda item: item[1])
+    groups["org_guard_histogram"] = group_by_AS_org_id(guard_relays)
+    groups["org_guard_ordered"] = sorted( [(org_id, count) for org_id, count in groups["org_guard_histogram"]["org_2_hist"].items() if count != 0], key=lambda item: item[1])
 
     stats_aggregator = RelayStatsAggregator(groups)
 
     # Assign badges to each family
+    print "[relay_rank] Assigning badges to each family"
     for family in families:
         temp = family
         family["badges"] = stats_aggregator.analyze_family(temp)
+    print "[relay_rank] End assigning badges to each family"
 
     # Reassign the groups with updated badges.
     groups["families"] = families
@@ -381,14 +469,19 @@ if __name__ == "__main__":
     groups["exit_bandwidth_rankings"] = sorted(families, key=lambda family: family["exit_bandwidth"], reverse=True)
 
     # These are used for the index page
-    groups["bandwidth_top10"] = groups["bandwidth_rankings"][:320]
-    groups["consensus_top10"] = groups["consensus_rankings"][:320]
-    groups["exit_bandwidth_top10"] = groups["exit_bandwidth_rankings"][:320]
+    # Number of relays to show on the front page
+    roster_cut = 320
+
+    groups["bandwidth_top10"] = groups["bandwidth_rankings"][:roster_cut]
+    groups["consensus_top10"] = groups["consensus_rankings"][:roster_cut]
+    groups["exit_bandwidth_top10"] = groups["exit_bandwidth_rankings"][:roster_cut]
 
     # Stores bandwidth rankings, consensus_weight rankings, all.json
+    print "[relay_rank] Storing rankings"
     store_rankings(groups)
+    print "[relay_rank] End storing rankings"
 
-    if static_store_strategy != "LOCAL":
+    if static_store_strategy == "REMOTE":
         # Uploads the data and stats to AWS S3
         print "[relay_rank] Uploading to S3"
         from upload import *

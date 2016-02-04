@@ -59,23 +59,31 @@
     </div>
     <div class="row" id="stats">
       <h3>Bandwidth Badge</h3>
-      <h4><span class="icon-rocket {{ family['badges']['bandwidth'][1]}}"></span> {{ "%.2f" | format(family["badges"]["bandwidth"][0] * (100.0)) }} percentile</h4>
+      <h4><span class="icon icon-rocket {{ family['badges']['bandwidth'][1]}}"></span> {{ "%.2f" | format(family["badges"]["bandwidth"][0] * (100.0)) }} percentile</h4>
     </div>
     <div class="row" id="stats">
       <h3>Exit Bandwidth Badge</h3>
-      <h4><span class="icon-exit {{ family['badges']['exit_bandwidth'][1]}}"></span> {{ "%.2f" | format(family["badges"]["exit_bandwidth"][0] * (100.0)) }} percentile</h4>
+      <h4><span class="icon icon-exit {{ family['badges']['exit_bandwidth'][1]}}"></span> {{ "%.2f" | format(family["badges"]["exit_bandwidth"][0] * (100.0)) }} percentile</h4>
     </div>
     <div class="row" id="stats">
       <h3>Consensus Weight Badge</h3>
-      <h4><span class="icon-tree {{ family['badges']['consensus_weight'][1]}}"></span> {{ "%.2f" | format(family["badges"]["consensus_weight"][0] * (100.0)) }} percentile</h4>
+      <h4><span class="icon icon-tree {{ family['badges']['consensus_weight'][1]}}"></span> {{ "%.2f" | format(family["badges"]["consensus_weight"][0] * (100.0)) }} percentile</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Exit Relay Country Diversity</h3>
+      <h4><span class="icon icon-eject {{ family['badges']['country_exit_diversity'][1]}}"></span> {{ "%.2f" | format(family["badges"]["country_exit_diversity"][0] * (100.0)) }} percentile</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Guard Relay Country Diversity</h3>
+      <h4><span class="icon icon-home3 {{ family['badges']['country_guard_diversity'][1]}}"></span> {{ "%.2f" | format(family["badges"]["country_guard_diversity"][0] * (100.0)) }} percentile</h4>
     </div>
     <div class="row" id="stats">
       <h3>Number of Countries</h3>
-      <h4><span class="icon-earth {{ family['badges']['num_countries'][1]}}"></span> {{ family["badges"]["num_countries"][0] }} countries</h4>
+      <h4><span class="icon icon-earth {{ family['badges']['num_countries'][1]}}"></span> {{ family["badges"]["num_countries"][0] }} countries</h4>
     </div>
     <div class="row" id="stats">
       <h3>Number of Relays</h3>
-      <h4><span class="icon-road {{ family['badges']['num_relays'][1]}}"></span> {{ family["badges"]["num_relays"][0] }} relays</h4>
+      <h4><span class="icon icon-road {{ family['badges']['num_relays'][1]}}"></span> {{ family["badges"]["num_relays"][0] }} relays</h4>
     </div>
     <div class="row" id="stats">
       <h3>Has Contact For At Least Half of Relays</h3>
@@ -94,7 +102,7 @@
       {% endif %}
     </div>
     <div class="row" id="stats">
-      <h3>Geo Diversity in Relays (Number of countries / Number of relays >= 0.5)</h3>
+      <h3>Geo Diversity in Relays (Number of countries / Number of relays &ge 0.5)</h3>
       {% if family["badges"]["geo_diversity"] %}
       <h4><span><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></span></h4>
       {% else %}

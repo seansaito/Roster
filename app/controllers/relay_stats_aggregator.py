@@ -20,7 +20,15 @@ class RelayStatsAggregator(object):
         self.exit_bandwidth_rankings = grouped_relays["exit_bandwidth_rankings"]
         self.country_count_rankings = grouped_relays["country_count_rankings"]
         self.country_cw_rankings = grouped_relays["country_cw_rankings"]
+        self.country_exit_rankings = grouped_relays["country_exit_rankings"]
+        self.country_exit_ordered_by_relay_count = grouped_relays["country_exit_ordered_by_relay_count"]
+        self.country_guard_rankings = grouped_relays["country_guard_rankings"]
+        self.country_guard_ordered_by_relay_count = grouped_relays["country_guard_ordered_by_relay_count"]
         self.port_rankings = grouped_relays["port_rankings"]
+        self.org_exit_histogram = grouped_relays["org_exit_histogram"]
+        self.org_exit_ordered = grouped_relays["org_exit_ordered"]
+        self.org_guard_histogram = grouped_relays["org_guard_histogram"]
+        self.org_guard_ordered = grouped_relays["org_guard_ordered"]
 
     def find_by_fingerprint(self, fingerprint, families):
         counter = 1
@@ -177,7 +185,103 @@ class RelayStatsAggregator(object):
                 return False
         return True
 
+    def get_country_diversity_badge(self, fingerprint, flag):
+        family, counter = self.find_by_fingerprint(fingerprint, self.families)
+
+        rankings = {}
+        countries_ordered_by_relay_count = []
+
+        if flag == "Guard":
+            # Will be using relay_count => can switch to cw_fraction if necessary
+            rankings = self.country_guard_rankings["relay_count"]
+            countries_ordered_by_relay_count = self.country_guard_ordered_by_relay_count
+        else:
+            rankings = self.country_exit_rankings["relay_count"]
+            countries_ordered_by_relay_count = self.country_exit_ordered_by_relay_count
+
+        # This excludes any country without any relay
+        # countries_ordered_by_relay_count = sorted([ (country, count) for country, count in rankings.items() if count != 0 ], key=lambda item: item[1])
+
+        num_countries = len(countries_ordered_by_relay_count)
+        smallest_percentile = 1.0
+
+        for relay in family["families"]:
+            # We only care about relays with either the Guard or Exit flag
+            if flag in relay["flags"]:
+                counter = 0
+                for country, count in countries_ordered_by_relay_count:
+                    if relay["country"] == country:
+                        break
+                    else:
+                        counter += 1
+                percentile = float(counter) / float(num_countries)
+                if percentile < smallest_percentile:
+                    smallest_percentile = percentile
+
+        if smallest_percentile > 0.8:
+            return (1.0 - smallest_percentile, "None")
+        elif smallest_percentile > 0.6:
+            return (1.0 - smallest_percentile, "bronze")
+        elif smallest_percentile > 0.4:
+            return (1.0 - smallest_percentile, "silver")
+        elif smallest_percentile > 0.2:
+            return (1.0 - smallest_percentile, "gold")
+        else:
+            return (1.0 - smallest_percentile, "platinum")
+
+    def get_org_id_diversity_badge(self, fingerprint, flag):
+        """
+            Same deal with get_country_diversity_badge.
+            For each family, award badge based on how rare the org_ids are.
+        """
+        family, counter = self.find_by_fingerprint(fingerprint, self.families)
+
+        histogram = {}
+
+        if flag == "Guard":
+            histogram = self.org_guard_histogram
+            histogram["ordered_histogram"] = self.org_guard_ordered
+        else:
+            histogram = self.org_exit_histogram
+            histogram["ordered_histogram"] = self.org_exit_ordered
+
+        # Very bad time performance
+        # histogram["ordered_histogram"] = sorted( [(org_id, count) for org_id, count in histogram["org_2_hist"].items() if count != 0], key=lambda item: item[1])
+
+        num_org_ids = len(histogram["ordered_histogram"])
+        smallest_percentile = 1.0
+
+        for relay in family["families"]:
+            if flag in relay["flags"] and "as_number" in relay:
+                relay_org_id = histogram["as_2_org"][relay["as_number"][2:]]
+                counter = 0
+                for org_id, count in histogram["ordered_histogram"]:
+                    if relay_org_id == org_id:
+                        break
+                    else:
+                        counter += 1
+                percentile = float(counter) / float(num_org_ids)
+                if percentile < smallest_percentile:
+                    smallest_percentile = percentile
+
+        if smallest_percentile > 0.8:
+            return (smallest_percentile, "None")
+        elif smallest_percentile > 0.6:
+            return (smallest_percentile, "bronze")
+        elif smallest_percentile > 0.4:
+            return (smallest_percentile, "silver")
+        elif smallest_percentile > 0.2:
+            return (smallest_percentile, "gold")
+        else:
+            return (smallest_percentile, "platinum")
+
     def analyze_family(self, family):
+        # TODO Badges Needed:
+        #   * country rarity (guard)
+        #   * country rarity (exit)
+        #   * org_rarity (guard)
+        #   * org_rarity (exit)
+        #   * total points (linear combination of all badges/stats)
         badges = {}
         fingerprint = family["families"][0]["fingerprint"]
         badges["bandwidth"] = self.get_bandwidth_percentile(fingerprint)
@@ -191,4 +295,8 @@ class RelayStatsAggregator(object):
         badges["rare_countries"] = self.get_rare_countries_badge(fingerprint)
         badges["liberal_exit"] = self.get_liberal_exit_badge(fingerprint)
         badges["runs_recommended_tor"] = self.get_tor_version_badge(fingerprint)
+        badges["country_exit_diversity"] = self.get_country_diversity_badge(fingerprint, "Exit")
+        badges["country_guard_diversity"] = self.get_country_diversity_badge(fingerprint, "Guard")
+        badges["org_exit_diversity"] = self.get_org_id_diversity_badge(fingerprint, "Exit")
+        badges["org_guard_diversity"] = self.get_org_id_diversity_badge(fingerprint, "Guard")
         return badges

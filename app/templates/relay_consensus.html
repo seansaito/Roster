@@ -1,7 +1,7 @@
-<tr>
-  {% set fingerprint = family["families"][0]["fingerprint"] %}
+{% set fingerprint = family["families"][0]["fingerprint"] %}
+<tr onclick="window.document.location='/family_detail/{{fingerprint}}';" style="cursor: pointer; cursor: hand;">
   <td class="text-center">{{ rank_consensus }}</td>
-  <td style="width: 20%;"><a href="{{ url_for('family_detail', fingerprint=fingerprint) }}">{{ family["contact"][0] }}</a></th>
+  <td style="width: 20%;">{{ family["contact"][0] }}</th>
   <td>{{ "%.2f" | format(family["consensus_points"]) }}</td>
   <td class="text-center" style="width: 20%;">{{ family["consensus_weight"]}} ({{ "%.3f" | format(family["consensus_weight_fraction"] * 100) }}%)</td>
   <td class="text-center">{{ family["families"] | length }}</td>
