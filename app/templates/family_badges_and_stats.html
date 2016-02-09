@@ -1,5 +1,149 @@
 <div class="row" style="margin:2%;">
-  <div class="col-md-6">
+
+  <!-- Aggregate Data section -->
+
+  <div id="banner" class="row" style="margin: 2%; padding: 2%;">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4 text-center">
+      <h2>Aggregate Data</h2>
+    </div>
+    <div class="col-md-4">
+    </div>
+  </div>
+
+  <div class="row" style="margin: 2%; padding: 2%;">
+    <div class="col-md-4">
+      <h4>Bandwidth Points</h4>
+      <h2>{{ "%.2f" | format(family["bandwidth_points"] / (1000.0 * 1000.0))}}</h2>
+    </div>
+    <div class="col-md-4">
+      <h4>Consensus Weight Points</h4>
+      <h2>{{ "%.2f" | format(family["consensus_points"]) }}</h2>
+    </div>
+    <div class="col-md-4">
+      <h4>Bandwidth</h4>
+      <h2>{{ "%.2f" | format(family["observed_bandwidth"] / (1000.0 * 1000.0)) }} MB/s</h2>
+    </div>
+  </div>
+
+  <div class="row" style="margin: 2%; padding: 2%;">
+    <div class="col-md-4">
+      <h4>Consensus Weight</h4>
+      <h2>{{ family["consensus_weight"]}} ({{ "%.3f" | format(family["consensus_weight_fraction"] * 100) }}%)</h2>
+    </div>
+    <div class="col-md-4">
+      <h4>Exit Probability</h4>
+      <h2>{{ "%.3f" | format(family["exit_probability"] * 100) }}%</h2>
+    </div>
+    <div class="col-md-4">
+      <h4>Number of relays</h4>
+      <h2>{{ family["families"] | length }}</h2>
+    </div>
+  </div>
+
+  <div class="row" style="margin: 2%; padding: 2%;">
+    <div class="col-md-4">
+      <h4>Middle Probability</h2>
+      <h2>{{ "%.3f" | format(family["middle_probability"] * 100) }}%</h2>
+    </div>
+    <div class="col-md-4">
+      <h4>Contact</h4>
+      {% for contact in family["contact"] %}
+      <h5 style="padding: 1%;">{{contact}}</h5>
+      {% endfor %}
+    </div>
+    <div class="col-md-4">
+      <h4>Bitcoin Address</h4>
+      {% if family["bitcoin_addr"] != "None" %}
+        <a target="_blank" href="https://blockchain.info/address/{{ family['bitcoin_addr'] }}"><h4>{{ family["bitcoin_addr"] }}</h4></a>
+      {% else %}
+        <h2>None</h2>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- End Aggregate data section -->
+
+
+  <!-- Badges section -->
+
+  <div id="banner" class="row" style="margin: 2%; padding: 2%;">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4 text-center">
+      <h2>Badges</h2>
+    </div>
+    <div class="col-md-4">
+    </div>
+  </div>
+
+  <div class="row" style="margin: 2%;">
+    <div class="col-md-4">
+      <h3><span title='Bandwidth Badge | {{ "%.2f" | format(family["badges"]["bandwidth"][0] * (100.0)) }} percentile' class="icon icon-rocket {{ family['badges']['bandwidth'][1]}}"></span></h3>
+    </div>
+    <div class="col-md-4">
+      <h3><span title='Exit Bandwidth Badge | {{ "%.2f" | format(family["badges"]["exit_bandwidth"][0] * (100.0)) }} percentile' class="icon icon-exit {{ family['badges']['exit_bandwidth'][1]}}"></span></h3>
+    </div>
+    <div class="col-md-4">
+      <h3><span title='Consensus Weight Badge | {{ "%.2f" | format(family["badges"]["consensus_weight"][0] * (100.0)) }} percentile' class="icon icon-tree {{ family['badges']['consensus_weight'][1]}}"></span></h3>
+    </div>
+  </div>
+
+  <div class="row" style="margin: 2%;">
+    <div class="col-md-4">
+      <h3><span title='Exit Relay Country Diversity | {{ "%.2f" | format(family["badges"]["country_exit_diversity"][0] * (100.0)) }} percentile' class="icon icon-eject {{ family['badges']['country_exit_diversity'][1]}}"></span></h3>
+    </div>
+    <div class="col-md-4">
+      <h3><span title='Guard Relay Country Diversity | {{ "%.2f" | format(family["badges"]["country_guard_diversity"][0] * (100.0)) }} percentile' class="icon icon-home3 {{ family['badges']['country_guard_diversity'][1]}}"></span></h3>
+    </div>
+    <div class="col-md-4">
+      <h3><span title='Exit Relay AS Org Diversity | {{ "%.2f" | format(family["badges"]["country_exit_diversity"][0] * (100.0)) }} percentile' class="icon icon-spades {{ family['badges']['org_exit_diversity'][1]}}"></span></h3>
+    </div>
+  </div>
+
+  <div class="row" style="margin: 2%;">
+    <div class="col-md-4">
+      <h3><span title='Guard Relay AS Org Diversity | {{ "%.2f" | format(family["badges"]["country_guard_diversity"][0] * (100.0)) }} percentile' class="icon icon-clubs {{ family['badges']['org_guard_diversity'][1]}}"></span></h3>
+    </div>
+    <div class="col-md-4">
+      <h3><span title='Country Count Badge | {{ family["badges"]["num_countries"][0] }} countries' class="icon icon-earth {{ family['badges']['num_countries'][1]}}"></span></h3>
+    </div>
+    <div class="col-md-4">
+      <h3><span title='Relay Count Badge |  {{ family["badges"]["num_relays"][0] }} relays' class="icon icon-road {{ family['badges']['num_relays'][1]}}"></span></h3>
+    </div>
+  </div>
+
+  <!-- <div class="row" style="margin: 2%;">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+    </div>
+  </div>
+
+  <div class="row" style="margin: 2%;">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+    </div>
+  </div>
+
+  <div class="row" style="margin: 2%;">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+    </div>
+  </div>
+ -->
+
+
+  <!-- <div class="col-md-6">
     <div class="row" id="stats">
       <h2>Aggregate Data</h2>
     </div>
@@ -53,6 +197,11 @@
     {% else %}
     {% endif %}
   </div>
+
+
+
+
+
   <div class="col-md-6">
     <div class="row">
       <h2>Badges</h2>
@@ -76,6 +225,14 @@
     <div class="row" id="stats">
       <h3>Guard Relay Country Diversity</h3>
       <h4><span class="icon icon-home3 {{ family['badges']['country_guard_diversity'][1]}}"></span> {{ "%.2f" | format(family["badges"]["country_guard_diversity"][0] * (100.0)) }} percentile</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Exit AS Organization Diversity</h3>
+      <h4><span class="icon icon-spades {{ family['badges']['org_exit_diversity'][1]}}"></span> {{ "%.2f" | format(family["badges"]["country_exit_diversity"][0] * (100.0)) }} percentile</h4>
+    </div>
+    <div class="row" id="stats">
+      <h3>Guard AS Organization Diversity</h3>
+      <h4><span class="icon icon-clubs {{ family['badges']['org_guard_diversity'][1]}}"></span> {{ "%.2f" | format(family["badges"]["country_guard_diversity"][0] * (100.0)) }} percentile</h4>
     </div>
     <div class="row" id="stats">
       <h3>Number of Countries</h3>
@@ -117,6 +274,7 @@
       <h4><span><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></span></h4>
       {% endif %}
     </div>
+  </div> -->
 
-  </div>
+
 </div>

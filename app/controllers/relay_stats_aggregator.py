@@ -22,8 +22,10 @@ class RelayStatsAggregator(object):
         self.country_cw_rankings = grouped_relays["country_cw_rankings"]
         self.country_exit_rankings = grouped_relays["country_exit_rankings"]
         self.country_exit_ordered_by_relay_count = grouped_relays["country_exit_ordered_by_relay_count"]
+        print self.country_exit_ordered_by_relay_count
         self.country_guard_rankings = grouped_relays["country_guard_rankings"]
         self.country_guard_ordered_by_relay_count = grouped_relays["country_guard_ordered_by_relay_count"]
+        print self.country_guard_ordered_by_relay_count
         self.port_rankings = grouped_relays["port_rankings"]
         self.org_exit_histogram = grouped_relays["org_exit_histogram"]
         self.org_exit_ordered = grouped_relays["org_exit_ordered"]
@@ -186,7 +188,8 @@ class RelayStatsAggregator(object):
         return True
 
     def get_country_diversity_badge(self, fingerprint, flag):
-        family, counter = self.find_by_fingerprint(fingerprint, self.families)
+        # print "[get_country_diversity_badge] Called"
+        family, c = self.find_by_fingerprint(fingerprint, self.families)
 
         rankings = {}
         countries_ordered_by_relay_count = []
@@ -210,13 +213,21 @@ class RelayStatsAggregator(object):
             if flag in relay["flags"]:
                 counter = 0
                 for country, count in countries_ordered_by_relay_count:
-                    if relay["country"] == country:
+                    if relay["country"].upper() == country:
+                        # print "[get_country_diversity_badge] Hit with counter: %d" % counter
                         break
                     else:
                         counter += 1
                 percentile = float(counter) / float(num_countries)
+                # print percentile
                 if percentile < smallest_percentile:
                     smallest_percentile = percentile
+            else:
+                continue
+
+        # print smallest_percentile
+
+        # print "[get_country_diversity_badge] Percentage is %.2f" % (1.0 - float(smallest_percentile))
 
         if smallest_percentile > 0.8:
             return (1.0 - smallest_percentile, "None")
@@ -265,22 +276,18 @@ class RelayStatsAggregator(object):
                     smallest_percentile = percentile
 
         if smallest_percentile > 0.8:
-            return (smallest_percentile, "None")
+            return (1.0 - smallest_percentile, "None")
         elif smallest_percentile > 0.6:
-            return (smallest_percentile, "bronze")
+            return (1.0 - smallest_percentile, "bronze")
         elif smallest_percentile > 0.4:
-            return (smallest_percentile, "silver")
+            return (1.0 - smallest_percentile, "silver")
         elif smallest_percentile > 0.2:
-            return (smallest_percentile, "gold")
+            return (1.0 - smallest_percentile, "gold")
         else:
-            return (smallest_percentile, "platinum")
+            return (1.0 - smallest_percentile, "platinum")
 
     def analyze_family(self, family):
         # TODO Badges Needed:
-        #   * country rarity (guard)
-        #   * country rarity (exit)
-        #   * org_rarity (guard)
-        #   * org_rarity (exit)
         #   * total points (linear combination of all badges/stats)
         badges = {}
         fingerprint = family["families"][0]["fingerprint"]
@@ -299,4 +306,5 @@ class RelayStatsAggregator(object):
         badges["country_guard_diversity"] = self.get_country_diversity_badge(fingerprint, "Guard")
         badges["org_exit_diversity"] = self.get_org_id_diversity_badge(fingerprint, "Exit")
         badges["org_guard_diversity"] = self.get_org_id_diversity_badge(fingerprint, "Guard")
+        badges["overall_rank"] = ""
         return badges
