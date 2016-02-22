@@ -18,6 +18,7 @@
   }
   .navbar-default .navbar-brand {
     color: #ecf0f1;
+    font-family: 'Black Ops One', cursive;    
   }
   .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
     color: #ef7705;
