@@ -15,11 +15,11 @@
   <div class="row" style="margin: 2%; padding: 2%;">
     <div class="col-md-4">
       <h4>Bandwidth Points</h4>
-      <h2>{{ "%.2f" | format(family["bandwidth_points"] / (1000.0 * 1000.0))}}</h2>
+      <h2>{{ (family["bandwidth_points"] / (1000.0 * 1000.0) | int() }}</h2>
     </div>
     <div class="col-md-4">
       <h4>Consensus Weight Points</h4>
-      <h2>{{ "%.2f" | format(family["consensus_points"]) }}</h2>
+      <h2>{{ family["consensus_points"] | int() }}</h2>
     </div>
     <div class="col-md-4">
       <h4>Bandwidth</h4>
