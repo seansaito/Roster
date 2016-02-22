@@ -266,7 +266,7 @@ class RelayStatsAggregator(object):
 
         for relay in family["families"]:
             if flag in relay["flags"] and "as_number" in relay:
-                relay_org_id = histogram["as_2_org"][relay["as_number"][2:]]
+                relay_org_id = histogram["as_2_org"][relay["as_number"][2:]][0]
                 counter = 0
                 for org_id, count in histogram["ordered_histogram"]:
                     if relay_org_id == org_id:

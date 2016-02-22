@@ -14,6 +14,17 @@
 
   <div class="row" style="margin: 2%; padding: 2%;">
     <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+      <h4>Total Points</h4>
+      <h2>{{ family["badges"]["overall_rank"] | int() }}</h2>
+    </div>
+    <div class="col-md-4">
+    </div>
+  </div>
+
+  <div class="row" style="margin: 2%; padding: 2%;">
+    <div class="col-md-4">
       <h4>Bandwidth Points</h4>
       <h2>{{ (family["bandwidth_points"] / (1000.0 * 1000.0)) | int() }}</h2>
     </div>
@@ -80,52 +91,52 @@
 
   <div class="row" style="margin: 2%;">
     <div class="col-md-4">
-      <h3><span title='Bandwidth Badge | {{ "%.2f" | format(family["badges"]["bandwidth"][0] * (100.0)) }} percentile' class="icon icon-rocket {{ family['badges']['bandwidth'][1]}}"></span></h3>
+      <h4><span title='Bandwidth Badge | {{ "%.2f" | format(family["badges"]["bandwidth"][0] * (100.0)) }} percentile' class="icon icon-rocket {{ family['badges']['bandwidth'][1]}}"></span></h4>
     </div>
     <div class="col-md-4">
-      <h3><span title='Exit Bandwidth Badge | {{ "%.2f" | format(family["badges"]["exit_bandwidth"][0] * (100.0)) }} percentile' class="icon icon-exit {{ family['badges']['exit_bandwidth'][1]}}"></span></h3>
+      <h4><span title='Exit Bandwidth Badge | {{ "%.2f" | format(family["badges"]["exit_bandwidth"][0] * (100.0)) }} percentile' class="icon icon-exit {{ family['badges']['exit_bandwidth'][1]}}"></span></h4>
     </div>
     <div class="col-md-4">
-      <h3><span title='Consensus Weight Badge | {{ "%.2f" | format(family["badges"]["consensus_weight"][0] * (100.0)) }} percentile' class="icon icon-library {{ family['badges']['consensus_weight'][1]}}"></span></h3>
-    </div>
-  </div>
-
-  <div class="row" style="margin: 2%;">
-    <div class="col-md-4">
-      <h3><span title='Exit Relay Country Diversity | {{ "%.2f" | format(family["badges"]["country_exit_diversity"][0] * (100.0)) }} percentile' class="icon icon-podcast {{ family['badges']['country_exit_diversity'][1]}}"></span></h3>
-    </div>
-    <div class="col-md-4">
-      <h3><span title='Guard Relay Country Diversity | {{ "%.2f" | format(family["badges"]["country_guard_diversity"][0] * (100.0)) }} percentile' class="icon icon-marvin {{ family['badges']['country_guard_diversity'][1]}}"></span></h3>
-    </div>
-    <div class="col-md-4">
-      <h3><span title='Exit Relay AS Org Diversity | {{ "%.2f" | format(family["badges"]["org_exit_diversity"][0] * (100.0)) }} percentile' class="icon icon-organization {{ family['badges']['org_exit_diversity'][1]}}"></span></h3>
+      <h4><span title='Consensus Weight Badge | {{ "%.2f" | format(family["badges"]["consensus_weight"][0] * (100.0)) }} percentile' class="icon icon-library {{ family['badges']['consensus_weight'][1]}}"></span></h4>
     </div>
   </div>
 
   <div class="row" style="margin: 2%;">
     <div class="col-md-4">
-      <h3><span title='Guard Relay AS Org Diversity | {{ "%.2f" | format(family["badges"]["org_guard_diversity"][0] * (100.0)) }} percentile' class="icon icon-spaceinvaders {{ family['badges']['org_guard_diversity'][1]}}"></span></h3>
+      <h4><span title='Exit Relay Country Diversity | {{ "%.2f" | format(family["badges"]["country_exit_diversity"][0] * (100.0)) }} percentile' class="icon icon-podcast {{ family['badges']['country_exit_diversity'][1]}}"></span></h4>
     </div>
     <div class="col-md-4">
-      <h3><span title='Country Count Badge | {{ family["badges"]["num_countries"][0] }} countries' class="icon icon-earth {{ family['badges']['num_countries'][1]}}"></span></h3>
+      <h4><span title='Guard Relay Country Diversity | {{ "%.2f" | format(family["badges"]["country_guard_diversity"][0] * (100.0)) }} percentile' class="icon icon-marvin {{ family['badges']['country_guard_diversity'][1]}}"></span></h4>
     </div>
     <div class="col-md-4">
-      <h3><span title='Relay Count Badge |  {{ family["badges"]["num_relays"][0] }} relays' class="icon icon-road {{ family['badges']['num_relays'][1]}}"></span></h3>
+      <h4><span title='Exit Relay AS Org Diversity | {{ "%.2f" | format(family["badges"]["org_exit_diversity"][0] * (100.0)) }} percentile' class="icon icon-organization {{ family['badges']['org_exit_diversity'][1]}}"></span></h4>
+    </div>
+  </div>
+
+  <div class="row" style="margin: 2%;">
+    <div class="col-md-4">
+      <h4><span title='Guard Relay AS Org Diversity | {{ "%.2f" | format(family["badges"]["org_guard_diversity"][0] * (100.0)) }} percentile' class="icon icon-spaceinvaders {{ family['badges']['org_guard_diversity'][1]}}"></span></h4>
+    </div>
+    <div class="col-md-4">
+      <h4><span title='Country Count Badge | {{ family["badges"]["num_countries"][0] }} countries' class="icon icon-earth {{ family['badges']['num_countries'][1]}}"></span></h4>
+    </div>
+    <div class="col-md-4">
+      <h4><span title='Relay Count Badge |  {{ family["badges"]["num_relays"][0] }} relays' class="icon icon-airplane {{ family['badges']['num_relays'][1]}}"></span></h4>
     </div>
   </div>
 
   <div class="row" style="margin: 2%;">
 
     <div class="col-md-4">
-      <h3><span title="Has Contact for Half of Relays | {{family['badges']['has_contact_for_half']}}" class='icon icon-book2 {% if family["badges"]["has_contact_for_half"] %}orange{% endif %}'></span></h3>
+      <h4><span id="enlarged-icon" title="Has Contact for Half of Relays | {{family['badges']['has_contact_for_half']}}" class='icon icon-book2 {% if family["badges"]["has_contact_for_half"] %}orange{% endif %}'></span></h4>
     </div>
     <div class="col-md-4">
-      <h3><span title="Half of Relays Are Guards | {{family['badges']['has_guard_for_half']}}"
-        class='icon icon-cone {% if family["badges"]["has_guard_for_half"] %}orange{% endif %}'></span></h3>
+      <h4><span id="enlarged-icon" title="Half of Relays Are Guards | {{family['badges']['has_guard_for_half']}}"
+        class='icon icon-cone {% if family["badges"]["has_guard_for_half"] %}orange{% endif %}'></span></h4>
     </div>
     <div class="col-md-4">
-      <h3><span title="Geo Diversity in Relays (Number of countries / Number of relays ≥ 0.5) | {{family['badges']['geo_diversity']}}"
-        class='icon icon-globe {% if family["badges"]["geo_diversity"] %}orange{% endif %}'></span></h3>
+      <h4><span id="enlarged-icon" title="Geo Diversity in Relays (Number of countries / Number of relays ≥ 0.5) | {{family['badges']['geo_diversity']}}"
+        class='icon icon-globe {% if family["badges"]["geo_diversity"] %}orange{% endif %}'></span></h4>
     </div>
 
   </div>
@@ -133,13 +144,13 @@
   <div class="row" style="margin: 2%;">
 
     <div class="col-md-4">
-      <h3><span title="Runs Recommended Tor Version For All Relays | {{family['badges']['runs_recommended_tor']}}" class='icon icon-mortar-board {% if family["badges"]["runs_recommended_tor"] %}orange{% endif %}'></span></h3>
+      <h3><span id="enlarged-icon" title="Runs Recommended Tor Version For All Relays | {{family['badges']['runs_recommended_tor']}}" class='icon icon-mortar-board {% if family["badges"]["runs_recommended_tor"] %}orange{% endif %}'></span></h3>
     </div>
     <div class="col-md-4">
-      <h3><span title="Has an IPv6 Relay | {{family['badges']['has_ipv6 ']}}"  class='icon icon-paperplane {% if family["badges"]["has_ipv6"] %}orange{% endif %}'></span></h3>
+      <h3><span id="enlarged-icon" title="Has an IPv6 Relay | {{family['badges']['has_ipv6 ']}}"  class='icon icon-paperplane {% if family["badges"]["has_ipv6"] %}orange{% endif %}'></span></h3>
     </div>
     <div class="col-md-4">
-      <h3><span title="Has an IPv6 Exit Relay | {{family['badges']['has_ipv6_for_exit']}}" class='icon icon-rocket2 {% if family["badges"]["has_ipv6_for_exit"] %}orange{% endif %}'></span></h3>
+      <h3><span id="enlarged-icon" title="Has an IPv6 Exit Relay | {{family['badges']['has_ipv6_for_exit']}}" class='icon icon-rocket2 {% if family["badges"]["has_ipv6_for_exit"] %}orange{% endif %}'></span></h3>
     </div>
 
   </div>
@@ -271,7 +282,7 @@
     </div>
     <div class="row" id="stats">
       <h3>Number of Relays</h3>
-      <h4><span class="icon icon-road {{ family['badges']['num_relays'][1]}}"></span> {{ family["badges"]["num_relays"][0] }} relays</h4>
+      <h4><span class="icon icon-airplane {{ family['badges']['num_relays'][1]}}"></span> {{ family["badges"]["num_relays"][0] }} relays</h4>
     </div>
     <div class="row" id="stats">
       <h3>Has Contact For At Least Half of Relays</h3>

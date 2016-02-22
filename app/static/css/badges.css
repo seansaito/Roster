@@ -2128,25 +2128,31 @@ Below is custom, do not overwrite
 }
 
 
-.gold {
+h4 .gold {
   font-size: 4em;
   padding: 3px;
-  color: #e5c100;
-	background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,rgba(255,255,255,1) 56%,rgba(252,235,0,1) 96%);
+  /*color: #e5c100;*/
+	background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,rgba(253,251,230,1) 56%,rgba(252,235,0,1) 96%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.silver {
+h4 .silver {
   font-size: 4em;
   padding: 3px;
-  color: #c0c0c0;
+  /*color: #c0c0c0;*/
 	background: linear-gradient(45deg,  rgba(160,160,160,1) 0%,rgba(232,232,232,1) 56%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.bronze {
+h4 .bronze {
   font-size: 4em;
   padding: 3px;
-  color: #FF6600;
+  /*color: #FF6600;*/
 	background: linear-gradient(45deg,  rgba(223,182,103,1) 0%,rgba(249,243,232,1) 56%,rgba(231,192,116,1) 96%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .None {
