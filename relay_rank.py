@@ -449,7 +449,6 @@ if __name__ == "__main__":
     groups["country_exit_ordered_by_relay_count"] = sorted([ (country, count) for country, count in groups["country_exit_rankings"]["relay_count"].items() if count != 0 ], key=lambda item: item[1])
     groups["country_guard_rankings"] = record_country_stats_json(guard_relays)
     groups["country_guard_ordered_by_relay_count"] = sorted([ (country, count) for country, count in groups["country_guard_rankings"]["relay_count"].items() if count != 0 ], key=lambda item: item[1])
-    print groups["country_guard_ordered_by_relay_count"]
     groups["port_rankings"] = record_port_stats(relays)
     groups["org_exit_histogram"] = group_by_AS_org_id(exit_relays)
     groups["org_exit_ordered"] = sorted( [(org_id, count) for org_id, count in groups["org_exit_histogram"]["org_2_hist"].items() if count != 0], key=lambda item: item[1])

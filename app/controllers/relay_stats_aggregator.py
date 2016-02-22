@@ -6,7 +6,11 @@
 
 # Imports
 from app import app
+import os, json, re
 from global_vars import *
+
+### Global vars ###
+coefficient_file = "app/static/json/rank_coefficients.json"
 
 class RelayStatsAggregator(object):
 
@@ -22,10 +26,8 @@ class RelayStatsAggregator(object):
         self.country_cw_rankings = grouped_relays["country_cw_rankings"]
         self.country_exit_rankings = grouped_relays["country_exit_rankings"]
         self.country_exit_ordered_by_relay_count = grouped_relays["country_exit_ordered_by_relay_count"]
-        print self.country_exit_ordered_by_relay_count
         self.country_guard_rankings = grouped_relays["country_guard_rankings"]
         self.country_guard_ordered_by_relay_count = grouped_relays["country_guard_ordered_by_relay_count"]
-        print self.country_guard_ordered_by_relay_count
         self.port_rankings = grouped_relays["port_rankings"]
         self.org_exit_histogram = grouped_relays["org_exit_histogram"]
         self.org_exit_ordered = grouped_relays["org_exit_ordered"]
@@ -286,8 +288,75 @@ class RelayStatsAggregator(object):
         else:
             return (1.0 - smallest_percentile, "platinum")
 
+    def get_ipv6_regex(self, address):
+        """
+        Helper function
+
+        Finds the ipv6 (ignoring the port)
+        from the relay's or_address field
+        """
+        res = re.search(r'\[.*\]', address, re.IGNORECASE)
+        return res
+
+    def get_ipv6_badge(self, fingerprint, for_exit):
+        """
+        If a family has an ipv6, then return True
+        """
+        family, counter = self.find_by_fingerprint(fingerprint, self.families)
+
+        for relay in family["families"]:
+            if for_exit and "Exit" not in relay["flags"]:
+                continue
+            else:
+                if "or_addresses" in relay:
+                    for address in relay["or_addresses"]:
+                        res = self.get_ipv6_regex(address)
+                        if res is not None:
+                            return True
+
+        return False
+
+    ### For total overall rank ###
+
+    def load_json(self, filename):
+        store = {}
+        try:
+            with open(filename, "r+") as fp:
+                store = json.load(fp)
+                fp.close()
+                return store
+        except:
+            return store
+
+    def get_overall_rank(self, badges):
+        """
+        This function takes a processed dictionary of badges and points
+        and computes a total linear combination using the values of each
+        category and coefficients defined in the json file rank_coefficients.json
+        """
+        overall_rank = 0
+        coefficients = self.load_json(coefficient_file)
+
+        if len(coefficients) == 0:
+            print "[RelayStatsAggregator::get_overall_rank] Error loading coefficients"
+            return 0
+
+        for key, value in badges.items():
+            coefficient = coefficients[key]
+            if type(value) is tuple:
+                overall_rank += coefficient * value[0]
+            elif type(value) is bool:
+                overall_rank += coefficient * int(value)
+            else:
+                print "[RelayStatsAggregator::get_overall_rank] Error type in ranking (%s)" % type(value)
+                return 0
+
+        return overall_rank
+
     def analyze_family(self, family):
         # TODO Badges Needed:
+        #   * ipv6
+        #   * ipv6 for exit
         #   * total points (linear combination of all badges/stats)
         badges = {}
         fingerprint = family["families"][0]["fingerprint"]
@@ -306,5 +375,7 @@ class RelayStatsAggregator(object):
         badges["country_guard_diversity"] = self.get_country_diversity_badge(fingerprint, "Guard")
         badges["org_exit_diversity"] = self.get_org_id_diversity_badge(fingerprint, "Exit")
         badges["org_guard_diversity"] = self.get_org_id_diversity_badge(fingerprint, "Guard")
-        badges["overall_rank"] = ""
+        badges["has_ipv6"] = self.get_ipv6_badge(fingerprint, False)
+        badges["has_ipv6_for_exit"] = self.get_ipv6_badge(fingerprint, True)
+        badges["overall_rank"] = self.get_overall_rank(badges)
         return badges
