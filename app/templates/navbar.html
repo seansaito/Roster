@@ -17,6 +17,7 @@
             
           </li>
       </ul>
+{% if not top10_bandwidth and not top10_consensus %}
         <ul class="nav navbar-nav navbar-right">
           <li><a>A relay operator? Search here:</a></li>
           <form class="navbar-form navbar-right" role="search" action="/search" method="post">
@@ -28,6 +29,7 @@
           </li>
         </form>
       </ul>
+{% endif %}      
     </div>
   </div>
 </nav>
