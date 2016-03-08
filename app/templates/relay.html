@@ -1,13 +1,13 @@
 {% set fingerprint = family["families"][0]["fingerprint"] %}
-<tr onclick="window.document.location='/family_detail/{{fingerprint}}';" style="cursor: pointer; cursor: hand;">
+<tr onclick="window.document.location='/family_detail/{{fingerprint}}';" style="cursor: hand; height: 3.5em; vertical-align: middle;">
   <!-- <a href="{{ url_for('family_detail', fingerprint=fingerprint) }}"> -->
-  <td class="text-center">{{ rank }}</td> 
-  <td style="width: 20%;">{{ family["contact"][0] | truncate(40) }}</th>
-  <td style="width: 1%;">{{ (family["bandwidth_points"] / (1000.0 * 1000.0)) | int() }}</td>
+  <td class="text-center" style="vertical-align: middle;">{{ rank }}</td>
+  <td style="width: 20%; vertical-align: middle;">{{ family["contact"][0] | truncate(40) }}</th>
+  <td style="width: 1%; vertical-align: middle;">{{ (family["bandwidth_points"] / (1000.0 * 1000.0)) | int() }}</td>
   <td>{{ "%.2f" | format(family["observed_bandwidth"] / (1000.0 * 1000.0)) }} MB/s</td>
-  <td class="text-center">{{ family["families"] | length }}</td>
-  <td class="text-center">{{ family["countries"] | length }}</td>
-  <td class="text-center">{{ family["exit"] }}</td>
-  <td class="text-center">{{ family["guard"] }}</td>
+  <td class="text-center" style="vertical-align: middle;">{{ family["families"] | length }}</td>
+  <td class="text-center" style="vertical-align: middle;">{{ family["countries"] | length }}</td>
+  <td class="text-center" style="vertical-align: middle;">{{ family["exit"] }}</td>
+  <td class="text-center" style="vertical-align: middle;">{{ family["guard"] }}</td>
 <!-- </a> -->
 </tr>
