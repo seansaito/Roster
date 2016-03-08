@@ -1,9 +1,9 @@
 {% set fingerprint = family["families"][0]["fingerprint"] %}
 <tr onclick="window.document.location='/family_detail/{{fingerprint}}';" style="cursor: hand; height: 3.5em;">
   <td class="text-center;" style="vertical-align: middle;">{{ rank_consensus }}</td>
-  <td style="width: 20%; vertical-align: middle";>{{ family["contact"][0] | truncate(40) }}</th>
+  <td style="width: 20%; vertical-align: middle";>{{ family["contact"][0] | truncate(40) }}</td>
   <td>{{ family["consensus_points"] | int() }}</td>
-  <td class="text-right" style="width: 20%; vertical-align: middle;">{{ "%.3f" | format(family["consensus_weight_fraction"] * 100 }}%)</td>
+  <td class="text-right" style="width: 20%; vertical-align: middle;">{{ "%.3f" | format(family["consensus_weight_fraction"] * 100) }}%</td>
   <td class="text-center" style="vertical-align: middle;">{{ family["families"] | length }}</td>
   <td class="text-center" style="vertical-align: middle;">{{ family["countries"] | length }}</td>
   <td class="text-center" style="vertical-align: middle;">{{ family["exit"] }}</td>
