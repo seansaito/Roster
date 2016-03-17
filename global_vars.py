@@ -28,5 +28,17 @@ abs_paths = {
     "all": os.path.join(script_dir, rel_paths["all"])
 }
 
+# Database paths
+db_paths = {
+    "fingerprint_to_uuid": "app/static/json/fingerprint_to_uuid.json",
+    "uuid_to_family": "app/static/json/uuid_to_family.json"
+}
+
+# Absolute db_paths
+db_abs_paths = {
+    "fingerprint_to_uuid": os.path.join(script_dir, db_paths["fingerprint_to_uuid"]),
+    "uuid_to_family": os.path.join(script_dir, db_paths["uuid_to_family"])
+}
+
 # Flags for the relays
 flags = ["Authority", "BadExit", "Exit", "Fast", "Guard", "HSDir", "Running", "Stable", "V2Dir", "Valid"]

@@ -16,8 +16,7 @@ from boto.s3.key import Key
 
 import pycountry
 from collections import OrderedDict
-import re
-import time
+import re, uuid, time, datetime
 
 from global_vars import *
 
@@ -235,10 +234,8 @@ def group_by_exit_and_guard(relays):
     """
     Creates two files - AS stats aggregated for exit relays and guard relays
     """
-    exit_relays = [relay for relay in relays if "Exit" in relay["flags"]]
-    guard_relays = [relay for relay in relays if "Guard" in relay["flags"]]
-    exit_as_stats = group_by_AS(exit_relays)
-    guard_as_stats = group_by_AS(guard_relays)
+    exit_as_stats = group_by_AS([relay for relay in relays if "Exit" in relay["flags"]])
+    guard_as_stats = group_by_AS([relay for relay in relays if "Guard" in relay["flags"]])
 
     exit_json, guard_json = "exit_as_stats.json", "guard_as_stats.json"
     for filename, json_store in [(exit_json, exit_as_stats), (guard_json, guard_as_stats)]:
@@ -394,6 +391,82 @@ def group_by_AS_org_id(relays):
 
     return result_store
 
+def add_uuid(flag, data_store):
+    """
+    Function that adds uuid to every relay. The uuids are taken
+    from fingerprint_to_uuid.json and uuid_to_family.json. The uuids
+    serve as a way to keep persistent data about each family by tagging
+    every relay within the family
+
+    Args:
+        flag (str)          :  Indicates type of data_store ("relays" or "families")
+        data_store (list)   :  List of objects
+    """
+
+    ### Load the json files from db_abs_paths
+    f = open(db_abs_paths["fingerprint_to_uuid"], "r+")
+    fingerprint_to_uuid = json.load(f)
+    f.close()
+
+    f = open(db_abs_paths["uuid_to_family"], "r+")
+    uuid_to_family = json.load(f)
+    f.close()
+
+    # fingerprint_to_uuid, uuid_to_family = {}, {}
+    #
+    # for filename, store in [("fingerprint_to_uuid", fingerprint_to_uuid), ("uuid_to_family", uuid_to_family)]:
+    #     f = open(db_abs_paths[filename], "r+")
+    #     store = json.load(f)
+    #     f.close()
+
+    ### Now loop through stores
+    if flag == "relays":
+        for relay in data_store:
+            if relay["fingerprint"] in fingerprint_to_uuid:
+                ### We've seen this relay before
+                relay["uuid"] = fingerprint_to_uuid[relay["fingerprint"]]
+            else:
+                ### New relay, see if any family members have a uuid
+                ### Create extended_family field
+                if "extended_family" not in relay:
+                    relay["extended_family"] = relay.setdefault("effective_family",[]) + relay.setdefault("indirect_family", [])
+                for fingerprint in relay["extended_family"]:
+                    ### make sure to take out initial $ sign
+                    if fingerprint[1:] in fingerprint_to_uuid:
+                        relay["uuid"] = fingerprint_to_uuid[fingerprint[1:]]
+                        ### Update the store
+                        fingerprint_to_uuid[relay["fingerprint"]] = relay["uuid"]
+                ### At this point, if relay has no uuid field, then its family members also did not have a uuid.
+                ### We will create a new uuid now
+                new_uuid = str(uuid.uuid4())
+                relay["uuid"] = new_uuid
+                ### Update the store
+                fingerprint_to_uuid[relay["fingerprint"]] = relay["uuid"]
+        ### Now we update the store
+        f = open(db_abs_paths["fingerprint_to_uuid"], "w+")
+        f.write(json.dumps(fingerprint_to_uuid))
+        f.close()
+        return data_store
+    else:
+        ### flag is families
+        ### Since add_uuid should be called for relays first, we just pull each uuid from
+        ### fingerprint_to_uuid.json. Then we add new families to uuid_to_family.json
+        for family in data_store:
+            for relay in family["families"]:
+                try:
+                    relay["uuid"] = fingerprint_to_uuid[relay["fingerprint"]]
+                except:
+                    print "[add_uuid] Relay not tagged in fingerprint_to_uuid.json"
+            ### Now see if fingerprint is found in uuid_to_family. If not, then create a new entry
+            fam_uuid = family["families"][0]["uuid"]
+            ### Update to latest family data
+            uuid_to_family[fam_uuid] = family
+        ### Now update the store
+        f = open(db_abs_paths["uuid_to_family"], "w+")
+        f.write(json.dumps(uuid_to_family))
+        f.close()
+        return data_store
+
 def store_rankings(groups):
     rankings = {"top10_bandwidth": groups["bandwidth_top10"],
                 "top10_consensus": groups["consensus_top10"],
@@ -407,6 +480,7 @@ def store_rankings(groups):
 
     return
 
+### Main script
 if __name__ == "__main__":
     groups = {"families": [],
               "relays": [],
@@ -416,6 +490,8 @@ if __name__ == "__main__":
               "bandwidth_top10": [],
               "consensus_rankings": [],
               "consensus_top10": [],
+              "age_rank": [],
+              "uptime_rank": [],
               "exit_bandwidth_rankings": [],
               "exit_bandwidth_top10": [],
               "country_count_rankings": [],
@@ -429,6 +505,15 @@ if __name__ == "__main__":
     aggregator = FamilyAggregator()
     families = aggregator.families
     relays = aggregator.relays
+
+    ### TODO
+    ### Code to add uuid to each relay in each family
+    print "[relay_rank] Getting uuids for each relay"
+    relays = add_uuid("relays", relays)
+    print "[relay_rank] Getting uuids for each family"
+    families = add_uuid("families", families)
+    print "[relay_rank] UUID processing done"
+
     exit_relays = [relay for relay in relays if "Exit" in relay["flags"]]
     guard_relays = [relay for relay in relays if "Guard" in relay["flags"]]
 
@@ -441,6 +526,8 @@ if __name__ == "__main__":
     groups["bandwidth_rankings"] = sorted(families, key=lambda family: family["observed_bandwidth"], reverse=True)
     groups["consensus_rankings"] = sorted(families, key=lambda family: family["consensus_weight_fraction"], reverse=True)
     groups["exit_bandwidth_rankings"] = sorted(families, key=lambda family: family["exit_bandwidth"], reverse=True)
+    groups["age_rank"] = sorted(families, key=lambda family: datetime.datetime.strptime(family["first_seen"], "%Y-%m-%d %H:%M:%S"))
+    groups["uptime_rank"] = sorted(families, key=lambda family: datetime.datetime.strptime(family["maximum_uptime"], "%Y-%m-%d %H:%M:%S"))
     groups["country_count_rankings"], groups["country_cw_rankings"] = record_country_stats(relays)
     groups["country_exit_rankings"] = record_country_stats_json(exit_relays)
     ####
@@ -459,9 +546,10 @@ if __name__ == "__main__":
 
     # Assign badges to each family
     print "[relay_rank] Assigning badges to each family"
+    curr_time = datetime.datetime.utcnow()
     for family in families:
         temp = family
-        family["badges"] = stats_aggregator.analyze_family(temp)
+        family["badges"] = stats_aggregator.analyze_family(temp, curr_time)
     print "[relay_rank] End assigning badges to each family"
 
     # Reassign the groups with updated badges.

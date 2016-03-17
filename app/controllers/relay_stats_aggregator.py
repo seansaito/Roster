@@ -22,6 +22,8 @@ class RelayStatsAggregator(object):
         self.bandwidth_rankings = grouped_relays["bandwidth_rankings"]
         self.consensus_weight_rankings = grouped_relays["consensus_rankings"]
         self.exit_bandwidth_rankings = grouped_relays["exit_bandwidth_rankings"]
+        self.age_rank = grouped_relays["age_rank"]
+        self.uptime_rank = grouped_relays["uptime_rank"]
         self.country_count_rankings = grouped_relays["country_count_rankings"]
         self.country_cw_rankings = grouped_relays["country_cw_rankings"]
         self.country_exit_rankings = grouped_relays["country_exit_rankings"]
@@ -43,8 +45,8 @@ class RelayStatsAggregator(object):
             counter += 1
         return ""
 
-    def get_badge(self, counter):
-        percentile = float(self.num_relays - counter) / float(self.num_relays)
+    def get_badge(self, counter, denom):
+        percentile = float(denom - counter) / float(denom)
         if percentile < 0.2:
             return (percentile, "None")
         elif percentile < 0.4:
@@ -58,7 +60,7 @@ class RelayStatsAggregator(object):
 
     def get_bandwidth_percentile(self, fingerprint):
         family, counter = self.find_by_fingerprint(fingerprint, self.bandwidth_rankings)
-        return self.get_badge(counter)
+        return self.get_badge(counter, self.num_families)
 
     def get_exit_bandwidth_percentile(self, fingerprint):
         family, counter = self.find_by_fingerprint(fingerprint, self.exit_bandwidth_rankings)
@@ -74,7 +76,7 @@ class RelayStatsAggregator(object):
 
     def get_cw_percentile(self, fingerprint):
         family, counter = self.find_by_fingerprint(fingerprint, self.consensus_weight_rankings)
-        return self.get_badge(counter)
+        return self.get_badge(counter, self.num_families)
 
     def get_num_countries_badge(self, fingerprint):
         family, counter = self.find_by_fingerprint(fingerprint, self.families)
@@ -316,6 +318,14 @@ class RelayStatsAggregator(object):
 
         return False
 
+    def get_age_of_family_badge(self, fingerprint, curr_time):
+        family, counter = self.find_by_fingerprint(fingerprint, self.age_rank)
+        return self.get_badge(counter, self.num_families)
+
+    def get_maximum_uptime_badge(self, fingerprint, curr_time):
+        family, counter = self.find_by_fingerprint(fingerprint, self.uptime_rank)
+        return self.get_badge(counter, self.num_families)
+
     ### For total overall rank ###
 
     def load_json(self, filename):
@@ -353,7 +363,7 @@ class RelayStatsAggregator(object):
 
         return overall_rank
 
-    def analyze_family(self, family):
+    def analyze_family(self, family, curr_time):
         # TODO Badges Needed:
         #   * ipv6
         #   * ipv6 for exit
@@ -365,6 +375,8 @@ class RelayStatsAggregator(object):
         badges["exit_bandwidth"] = self.get_exit_bandwidth_percentile(fingerprint)
         badges["num_countries"] = self.get_num_countries_badge(fingerprint)
         badges["num_relays"] = self.get_num_relays_badge(fingerprint)
+        badges["age_of_family"] = self.get_age_of_family_badge(fingerprint, curr_time)
+        badges["maximum_uptime"] = self.get_maximum_uptime_badge(fingerprint, curr_time)
         badges["has_contact_for_half"] = self.get_contact_badge(fingerprint)
         badges["has_guard_for_half"] = self.get_guard_badge(fingerprint)
         badges["geo_diversity"] = self.has_geo_diversity(fingerprint)

@@ -3,6 +3,8 @@ from app.models.onionoo_connector import OnionooConnector
 from app.controllers.tshirt_validator import check_tshirt
 from difflib import SequenceMatcher
 
+import datetime
+
 # Implementation of the Singleton class
 class Singleton(type):
     _instances = {}
@@ -104,6 +106,8 @@ class FamilyAggregator(object):
             "consensus_weight": 0,
             "num_countries": 0,
             "num_relays": 0,
+            "age_of_family": 0,
+            "maximum_uptime": 0,
             "has_contact_for_half": 0,
             "has_guard_for_half": 0,
             "rank": 0,
@@ -135,6 +139,7 @@ class FamilyAggregator(object):
                           "middle_probability": 0,
                           "exit_probability": 0, "bitcoin_addr": "None",
                           "bandwidth_points": 0, "consensus_points": 0,
+                          "last_seen": str(datetime.datetime.now()), "maximum_uptime": str(datetime.datetime.now()),
                           "countries": [], "exit": 0, "guard": 0,
                           "t_shirts": [],
                           "eligible_for_tshirt": False}
@@ -151,6 +156,12 @@ class FamilyAggregator(object):
 
                 if "country" in relay:
                     family["countries"].append(relay["country"])
+
+                if "first_seen" in relay:
+                    family["first_seen"] = relay["first_seen"]
+
+                if "last_seen" in relay:
+                    family["maximum_uptime"] = relay["last_restarted"]
 
                 if check_tshirt(relay["fingerprint"], self.c):
                     family["t_shirts"].append(relay["fingerprint"])
@@ -190,6 +201,12 @@ class FamilyAggregator(object):
                                     family["guard"] += 1
                                 if "contact" in other_relay and not self.has_duplicate_contacts(other_relay, family):
                                     family["contact"].append(other_relay["contact"])
+                                if "first_seen" in other_relay:
+                                    if datetime.datetime.strptime(other_relay["first_seen"], "%Y-%m-%d %H:%M:%S") < datetime.datetime.strptime(family["first_seen"], "%Y-%m-%d %H:%M:%S"):
+                                        family["first_seen"] = other_relay["first_seen"]
+                                if "last_restarted" in other_relay:
+                                    if datetime.datetime.strptime(other_relay["last_restarted"], "%Y-%m-%d %H:%M:%S") < datetime.datetime.strptime(family["maximum_uptime"], "%Y-%m-%d %H:%M:%S"):
+                                        family["maximum_uptime"] = other_relay["last_restarted"]
                                 all_relays[j][1] = True
 
                 family["families"] = sorted(family["families"], key=lambda relay: relay["observed_bandwidth"], reverse=True)
