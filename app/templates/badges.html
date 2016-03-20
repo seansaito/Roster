@@ -14,269 +14,74 @@
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
+
+<style>
+  .badge {
+    float: left;
+    display: inline;
+  }
+</style>
+
 <body>
 
   {% include "navbar.html" %}
 
-  <div class="container">
-    <div class="center-block">
-      <div class="row">
-        <h1>Badges <span><h3>Details and Requirements</h3></span></h1>
+  <div class="container text-center">
+      <div class="row" style="margin-top: 5%;">
+        <h1>Badges</h1>
       </div>
 
-      <div class="row" style="margin: 3%;">
-        <div class="col-md-4 text-center">
-          <h3> </h3>
-        </div>
+      {% for badge in badges %}
+      <h2 class="text-center">{{ badge["name"] }}</h2>
 
-        <div class="col-md-8">
-          <div class="col-md-6">
-            <div class="col-md-6 text-center" style="padding: 4%;">
-              <h3>Platinum</h3>
-            </div>
-            <div class="col-md-6 text-center" style="padding: 4%;">
-              <h3>Gold</h3>
-            </div>
+      {% if badge["tiers"] == 4 %}
+      <div class="row text-center" style="margin: 2%; padding: 2%;">
+        <div class="row" style="margin: 2%; padding: 2%;">
+          <div class="col-md-3">
           </div>
-
-          <div class="col-md-6">
-            <div class="col-md-6 text-center" style="padding: 4%;">
-              <h3>Silver</h3>
-            </div>
-            <div class="col-md-6 text-center" style="padding: 4%;">
-              <h3>Bronze</h3>
-            </div>
+          <div class="col-md-3">
+            <h4><span class="icon icon-{{badge['icon']}} platinum"></span></h4>
+          </div>
+          <div class="col-md-3">
+            <h4><span class="icon icon-{{badge['icon']}} gold"></span></h4>
+          </div>
+          <div class="col-md-3">
           </div>
         </div>
-      </div> <!-- row -->
-
-      <div class="row" style="margin: 5%;">
-        <div class="col-md-4 text-center">
-          <h2>Bandwidth</h2>
-        </div>
-
-        <div class="col-md-8">
-          <div class="col-md-6">
-
-            <div class="col-md-6">
-              <div class="card card-block text-center" style="padding: 4%;">
-                <span class="icon icon-rocket platinum" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 80% percentile</p>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card card-block text-center" style="padding: 4%;">
-                <span class="icon icon-rocket gold" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 60% percentile</p>
-              </div>
-            </div>
-
+        <div class="row" style="margin: 2%; padding: 2%;">
+          <div class="col-md-3">
           </div>
-
-          <div class="col-md-6">
-
-            <div class="col-md-6">
-              <div class="card card-block text-center" style="padding: 4%;">
-                <span class="icon icon-rocket silver" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 40% percentile</p>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card card-block text-center" style="padding: 4%;">
-                <span class="icon icon-rocket bronze" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 20% percentile</p>
-              </div>
-            </div>
-
+          <div class="col-md-3">
+            <h4><span class="icon icon-{{badge['icon']}} silver"></span></h4>
+          </div>
+          <div class="col-md-3">
+            <h4><span class="icon icon-{{badge['icon']}} bronze"></span></h4>
+          </div>
+          <div class="col-md-3">
           </div>
         </div>
+      </div>
 
-      </div><!-- row -->
+      {% else %}
 
-      <div class="row" style="margin: 5%;"  >
-        <div class="col-md-4 text-center">
-          <h2>Exit Bandwidth</h2>
+      <div class="row text-center"  style="margin: 2%; padding: 2%;">
+        <div class="col-md-3">
         </div>
-
-        <div class="col-md-8">
-          <div class="col-md-6">
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-exit platinum" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 80% percentile</p>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-exit gold" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 60% percentile</p>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="col-md-6">
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-exit silver" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 40% percentile</p>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-exit bronze" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 20% percentile</p>
-              </div>
-            </div>
-
-          </div>
+        <div class="col-md-3">
+          <h4><span id="enlarged-icon" class='icon icon-{{badge["icon"]}} orange'></span></h4>
         </div>
-
-      </div><!-- row -->
-
-      <div class="row" style="margin: 5%;"  >
-        <div class="col-md-4 text-center">
-          <h2>Consensus Weight</h2>
+        <div class="col-md-3">
+          <h4><span id="enlarged-icon" class='icon icon-{{badge["icon"]}}'></span></h4>
         </div>
-
-        <div class="col-md-8">
-          <div class="col-md-6">
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-tree platinum" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 80% percentile</p>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-tree gold" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 60% percentile</p>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="col-md-6">
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-tree silver" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 40% percentile</p>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-tree bronze" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 20% percentile</p>
-              </div>
-            </div>
-
-          </div>
+        <div class="col-md-3">
         </div>
+      </div>
 
-      </div><!-- row -->
-
-      <div class="row" style="margin: 5%;"  >
-        <div class="col-md-4 text-center">
-          <h2>Number of Countries</h2>
-        </div>
-
-        <div class="col-md-8">
-          <div class="col-md-6">
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-earth platinum" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 80% percentile</p>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-earth gold" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 60% percentile</p>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="col-md-6">
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-earth silver" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 40% percentile</p>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-earth bronze" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 20% percentile</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div><!-- row -->
-
-      <div class="row" style="margin: 5%;"  >
-        <div class="col-md-4 text-center">
-          <h2>Number of Relays</h2>
-        </div>
-
-        <div class="col-md-8">
-          <div class="col-md-6">
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-road platinum" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 80% percentile</p>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-road gold" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 60% percentile</p>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="col-md-6">
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-road silver" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 40% percentile</p>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card card-block text-center">
-                <span class="icon icon-road bronze" style="font-size: 4em; padding: 3px;"> </span>
-                <p class="card-text">&ge; 20% percentile</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div><!-- row -->
+      {% endif %}
+      </div>
+      {% endfor %}
 
 
-    </div><!-- center-block -->
   </div> <!-- container -->
 
 

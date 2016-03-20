@@ -277,4 +277,4 @@ def badges():
             "tiers": 4
         }
     ]
-    return render_template("test.html", badges=badges)
+    return render_template("badges.html", badges=badges)
