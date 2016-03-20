@@ -278,3 +278,7 @@ def badges():
         }
     ]
     return render_template("badges.html", badges=badges)
+
+@app.route("/faq")
+def faq():
+    return render_template("faq.html")
