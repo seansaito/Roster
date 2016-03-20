@@ -2163,3 +2163,7 @@ h4 .bronze {
 .orange {
   color: #ef8b05;
 }
+
+#enlarged-icon {
+  font-size: 3em;
+}

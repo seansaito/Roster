@@ -1,107 +1,89 @@
-<div class="row" style="margin:2%;">
-  <div class="col-md-6">
-    <div class="row" style="margin:2%;">
-      <h2>Aggregate Data</h2>
-    </div>
-    <div class="row" id="stats">
-      <h3>Bandwidth Points</h3>
-      <h4>{{ "%.2f" | format(family["bandwidth_points"] / (1000.0 * 1000.0))}}</h4>
-    </div>
-    <div class="row" id="stats">
-      <h3>Consensus Weight Points</h3>
-      <h4>{{ "%.2f" | format(family["consensus_points"]) }}</h4>
-    </div>
-    <div class="row" id="stats">
-      <h3>Bandwidth</h3>
-      <h4>{{ "%.2f" | format(family["observed_bandwidth"] / (1000.0 * 1000.0)) }} MB/s</h4>
-    </div>
-    <div class="row" id="stats">
-      <h3>Consensus Weight</h3>
-      <h4>{{ family["consensus_weight"]}} ({{ "%.3f" | format(family["consensus_weight_fraction"] * 100) }}%)</h4>
-    </div>
-    <div class="row" id="stats">
-      <h3>Exit Probability</h3>
-      <h4>{{ "%.3f" | format(family["exit_probability"] * 100) }}%</h4>
-    </div>
-    <div class="row" id="stats">
-      <h3>Number of relays</h3>
-      <h4>{{ family["families"] | length }}</h4>
-    </div>
-    <div class="row" id="stats">
-      <h3>Middle Probability</h3>
-      <h4>{{ "%.3f" | format(family["middle_probability"] * 100) }}%</h4>
-    </div>
-    <div class="row" id="stats">
-      <h3>Contact</h3>
-      {% for contact in family["contact"] %}
-      <h4>{{contact}}</h4>
-      {% endfor %}
-    </div>
-    <div class="row" id="stats">
-      <h3>Bitcoin Address</h3>
-      {% if family["bitcoin_addr"] != "None" %}
-        <a target="_blank" href="https://blockchain.info/address/{{ family['bitcoin_addr'] }}"><h4>{{ family["bitcoin_addr"] }}</h4></a>
-      {% else %}
-        <h4>None</h4>
-      {% endif %}
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="row" style="margin:2%;">
-      <h2>Badges</h2>
-    </div>
-    <div class="row" id="stats">
-      <h3>Bandwidth Badge</h3>
-      <h4><span><img src="/static/img/badges/{{ family['badges']['bandwidth'][1]}}.png"></span> {{ "%.2f" | format(family["badges"]["bandwidth"][0] * (100.0)) }} percentile</h4>
-    </div>
-    <div class="row" id="stats">
-      <h3>Exit Bandwidth Badge</h3>
-      <h4><span><img src="/static/img/badges/{{ family['badges']['exit_bandwidth'][1]}}.png"></span> {{ "%.2f" | format(family["badges"]["exit_bandwidth"][0] * (100.0)) }} percentile</h4>
-    </div>
-    <div class="row" id="stats">
-      <h3>Consensus Weight Badge</h3>
-      <h4><span><img src="/static/img/badges/{{ family['badges']['consensus_weight'][1]}}.png"></span> {{ "%.2f" | format(family["badges"]["consensus_weight"][0] * (100.0)) }} percentile</h4>
-    </div>
-    <div class="row" id="stats">
-      <h3>Number of Countries</h3>
-      <h4><span><img src="/static/img/badges/{{ family['badges']['num_countries'][1]}}.png"></span> {{ family["badges"]["num_countries"][0] }} countries</h4>
-    </div>
-    <div class="row" id="stats">
-      <h3>Number of Relays</h3>
-      <h4><span><img src="/static/img/badges/{{ family['badges']['num_relays'][1]}}.png"></span> {{ family["badges"]["num_relays"][0] }} relays</h4>
-    </div>
-    <div class="row" id="stats">
-      <h3>Has Contact For At Least Half of Relays</h3>
-      {% if family["badges"]["has_contact_for_half"] %}
-      <h4><span><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></span></h4>
-      {% else %}
-      <h4><span><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></span></h4>
-      {% endif %}
-    </div>
-    <div class="row" id="stats">
-      <h3>Has Guard For At Least Half of Relays</h3>
-      {% if family["badges"]["has_guard_for_half"] %}
-      <h4><span><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></span></h4>
-      {% else %}
-      <h4><span><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></span></h4>
-      {% endif %}
-    </div>
-    <div class="row" id="stats">
-      <h3>Geo Diversity in Relays (Number of countries / Number of relays >= 0.5)</h3>
-      {% if family["badges"]["geo_diversity"] %}
-      <h4><span><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></span></h4>
-      {% else %}
-      <h4><span><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></span></h4>
-      {% endif %}
-    </div>
-    <div class="row" id="stats">
-      <h3>Runs Recommended Tor Version For All Relays</h3>
-      {% if family["badges"]["runs_recommended_tor"] %}
-      <h4><span><i class="fa fa-check fa-2x" style="color:#ef8b05"></i></span></h4>
-      {% else %}
-      <h4><span><i class="fa fa-check fa-2x" style="color:#D3D3D3"></i></span></h4>
-      {% endif %}
-    </div>
+<html>
+<head>
+  <title>Badges</title>
+  <!-- Bootstrap -->
+    <script src="/static/js/jquery-1.11.2.min.js"></script>
+  	<script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery.qtip.min.js"></script>
+  	<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
 
-  </div>
-</div>
+  	<link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+  	<script src="/static/js/collapse.js"></script>
+    <link href="/static/css/navbar.css" rel="stylesheet">
+    <link href="/static/css/badges.css" rel="stylesheet">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<style>
+  .badge {
+    float: left;
+    display: inline;
+  }
+</style>
+
+<body>
+
+  {% include "navbar.html" %}
+
+  <div class="container text-center">
+      <div class="row" style="margin-top: 5%;">
+        <h1>Badges</h1>
+      </div>
+
+      {% for badge in badges %}
+      <h2 class="text-center">{{ badge["name"] }}</h2>
+
+      {% if badge["tiers"] == 4 %}
+      <div class="row text-center" style="margin: 2%; padding: 2%;">
+        <div class="row" style="margin: 2%; padding: 2%;">
+          <div class="col-md-3">
+          </div>
+          <div class="col-md-3">
+            <h4><span class="icon icon-{{badge['icon']}} platinum"></span></h4>
+          </div>
+          <div class="col-md-3">
+            <h4><span class="icon icon-{{badge['icon']}} gold"></span></h4>
+          </div>
+          <div class="col-md-3">
+          </div>
+        </div>
+        <div class="row" style="margin: 2%; padding: 2%;">
+          <div class="col-md-3">
+          </div>
+          <div class="col-md-3">
+            <h4><span class="icon icon-{{badge['icon']}} silver"></span></h4>
+          </div>
+          <div class="col-md-3">
+            <h4><span class="icon icon-{{badge['icon']}} bronze"></span></h4>
+          </div>
+          <div class="col-md-3">
+          </div>
+        </div>
+      </div>
+
+      {% else %}
+
+      <div class="row text-center"  style="margin: 2%; padding: 2%;">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
+          <h4><span id="enlarged-icon" class='icon icon-{{badge["icon"]}} orange'></span></h4>
+        </div>
+        <div class="col-md-3">
+          <h4><span id="enlarged-icon" class='icon icon-{{badge["icon"]}}'></span></h4>
+        </div>
+        <div class="col-md-3">
+        </div>
+      </div>
+
+      {% endif %}
+      </div>
+      {% endfor %}
+
+
+  </div> <!-- container -->
+
+
+</body>
+</html>
