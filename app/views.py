@@ -188,95 +188,97 @@ def search():
     fingerprint = request.form["fingerprint"]
     return redirect(url_for("family_detail", fingerprint=fingerprint))
 
+# For generating list of badges in /badges
+badges = [
+    {
+        "name": "Bandwidth",
+        "icon": "rocket",
+        "tiers": 4
+    },
+    {
+        "name": "Exit Bandwidth",
+        "icon": "exit",
+        "tiers": 4
+    },
+    {
+        "name": "Consensus Weight",
+        "icon": "library",
+        "tiers": 4
+    },
+    {
+        "name": "Exit Diversity by Country",
+        "icon": "podcast",
+        "tiers": 4
+    },
+    {
+        "name": "Guard Diversity by Country",
+        "icon": "marvin",
+        "tiers": 4
+    },
+    {
+        "name": "Exit Diversity by AS Org",
+        "icon": "organization",
+        "tiers": 4
+    },
+    {
+        "name": "Guard Diversity by AS Org",
+        "icon": "spaceinvaders",
+        "tiers": 4
+    },
+    {
+        "name": "Number of Countries",
+        "icon": "earth",
+        "tiers": 4
+    },
+    {
+        "name": "Number of Relays",
+        "icon": "airplane",
+        "tiers": 4
+    },
+    {
+        "name": "Has Contact for At Least Half of Relays",
+        "icon": "book2",
+        "tiers": 2
+    },
+    {
+        "name": "At Least Half of Relays are Guards",
+        "icon": "cone",
+        "tiers": 2
+    },
+    {
+        "name": "Country Diversity",
+        "icon": "globe",
+        "tiers": 2
+    },
+    {
+        "name": "Runs Recommended Tor Version",
+        "icon": "mortar-board",
+        "tiers": 2
+    },
+    {
+        "name": "Has an IPv6 Relay",
+        "icon": "paperplane",
+        "tiers": 2
+    },
+    {
+        "name": "Has an IPv6 Exit Relay",
+        "icon": "rocket2",
+        "tiers": 2
+    },
+    {
+        "name": "Age of Family",
+        "icon": "hipster2",
+        "tiers": 4
+    },
+    {
+        "name": "Maximum Uptime",
+        "icon": "clock2",
+        "tiers": 4
+    }
+]
+
 @app.route("/badges")
 def badges():
-    badges = [
-        {
-            "name": "Bandwidth",
-            "icon": "rocket",
-            "tiers": 4
-        },
-        {
-            "name": "Exit Bandwidth",
-            "icon": "exit",
-            "tiers": 4
-        },
-        {
-            "name": "Consensus Weight",
-            "icon": "library",
-            "tiers": 4
-        },
-        {
-            "name": "Exit Diversity by Country",
-            "icon": "podcast",
-            "tiers": 4
-        },
-        {
-            "name": "Guard Diversity by Country",
-            "icon": "marvin",
-            "tiers": 4
-        },
-        {
-            "name": "Exit Diversity by AS Org",
-            "icon": "organization",
-            "tiers": 4
-        },
-        {
-            "name": "Guard Diversity by AS Org",
-            "icon": "spaceinvaders",
-            "tiers": 4
-        },
-        {
-            "name": "Number of Countries",
-            "icon": "earth",
-            "tiers": 4
-        },
-        {
-            "name": "Number of Relays",
-            "icon": "airplane",
-            "tiers": 4
-        },
-        {
-            "name": "Has Contact for At Least Half of Relays",
-            "icon": "book2",
-            "tiers": 2
-        },
-        {
-            "name": "At Least Half of Relays are Guards",
-            "icon": "cone",
-            "tiers": 2
-        },
-        {
-            "name": "Country Diversity",
-            "icon": "globe",
-            "tiers": 2
-        },
-        {
-            "name": "Runs Recommended Tor Version",
-            "icon": "mortar-board",
-            "tiers": 2
-        },
-        {
-            "name": "Has an IPv6 Relay",
-            "icon": "paperplane",
-            "tiers": 2
-        },
-        {
-            "name": "Has an IPv6 Exit Relay",
-            "icon": "rocket2",
-            "tiers": 2
-        },
-        {
-            "name": "Age of Family",
-            "icon": "hipster2",
-            "tiers": 4
-        },
-        {
-            "name": "Maximum Uptime",
-            "icon": "clock2",
-            "tiers": 4
-        }
-    ]
     return render_template("badges.html", badges=badges)
 
 @app.route("/faq")

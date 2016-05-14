@@ -7,6 +7,7 @@
 
 from app import app
 from app.controllers.relay_stats_aggregator import RelayStatsAggregator
+from app.controllers.uuid_tagger import add_uuid
 from app.models.family_aggregator import FamilyAggregator
 
 import json, os, datetime, csv
@@ -47,20 +48,6 @@ def record_country_stats(relays):
         if "country" in relay:
             relay_count[relay["country"].upper()] += 1
             cw_fraction[relay["country"].upper()] += relay.setdefault("consensus_weight_fraction", 0)
-
-    # First overwrite csv file using the one in s3
-    # TODO no need to connect to S3
-    # c = boto.connect_s3(acc_key, acc_sec)
-    # b = c.get_bucket(bucket)
-    # bucket_key = Key(b)
-    #
-    # bucket_key.key = "country_relay_count.csv"
-    # bucket_key.get_contents_to_filename(relay_count_path)
-    # b.set_acl("public-read", "country_relay_count.csv")
-    #
-    # bucket_key.key = "country_cw_fraction.csv"
-    # bucket_key.get_contents_to_filename(cw_fraction_path)
-    # b.set_acl("public-read", "country_cw_fraction.csv")
 
     # Write data for each stat
     time = "-".join(datetime.datetime.strftime(datetime.datetime.now(), "%Y, %m, %d, %H, %M, %S").split(", "))
@@ -390,82 +377,6 @@ def group_by_AS_org_id(relays):
     print "[group_by_AS_org_id] End function"
 
     return result_store
-
-def add_uuid(flag, data_store):
-    """
-    Function that adds uuid to every relay. The uuids are taken
-    from fingerprint_to_uuid.json and uuid_to_family.json. The uuids
-    serve as a way to keep persistent data about each family by tagging
-    every relay within the family
-
-    Args:
-        flag (str)          :  Indicates type of data_store ("relays" or "families")
-        data_store (list)   :  List of objects
-    """
-
-    ### Load the json files from db_abs_paths
-    f = open(db_abs_paths["fingerprint_to_uuid"], "r+")
-    fingerprint_to_uuid = json.load(f)
-    f.close()
-
-    f = open(db_abs_paths["uuid_to_family"], "r+")
-    uuid_to_family = json.load(f)
-    f.close()
-
-    # fingerprint_to_uuid, uuid_to_family = {}, {}
-    #
-    # for filename, store in [("fingerprint_to_uuid", fingerprint_to_uuid), ("uuid_to_family", uuid_to_family)]:
-    #     f = open(db_abs_paths[filename], "r+")
-    #     store = json.load(f)
-    #     f.close()
-
-    ### Now loop through stores
-    if flag == "relays":
-        for relay in data_store:
-            if relay["fingerprint"] in fingerprint_to_uuid:
-                ### We've seen this relay before
-                relay["uuid"] = fingerprint_to_uuid[relay["fingerprint"]]
-            else:
-                ### New relay, see if any family members have a uuid
-                ### Create extended_family field
-                if "extended_family" not in relay:
-                    relay["extended_family"] = relay.setdefault("effective_family",[]) + relay.setdefault("indirect_family", [])
-                for fingerprint in relay["extended_family"]:
-                    ### make sure to take out initial $ sign
-                    if fingerprint[1:] in fingerprint_to_uuid:
-                        relay["uuid"] = fingerprint_to_uuid[fingerprint[1:]]
-                        ### Update the store
-                        fingerprint_to_uuid[relay["fingerprint"]] = relay["uuid"]
-                ### At this point, if relay has no uuid field, then its family members also did not have a uuid.
-                ### We will create a new uuid now
-                new_uuid = str(uuid.uuid4())
-                relay["uuid"] = new_uuid
-                ### Update the store
-                fingerprint_to_uuid[relay["fingerprint"]] = relay["uuid"]
-        ### Now we update the store
-        f = open(db_abs_paths["fingerprint_to_uuid"], "w+")
-        f.write(json.dumps(fingerprint_to_uuid))
-        f.close()
-        return data_store
-    else:
-        ### flag is families
-        ### Since add_uuid should be called for relays first, we just pull each uuid from
-        ### fingerprint_to_uuid.json. Then we add new families to uuid_to_family.json
-        for family in data_store:
-            for relay in family["families"]:
-                try:
-                    relay["uuid"] = fingerprint_to_uuid[relay["fingerprint"]]
-                except:
-                    print "[add_uuid] Relay not tagged in fingerprint_to_uuid.json"
-            ### Now see if fingerprint is found in uuid_to_family. If not, then create a new entry
-            fam_uuid = family["families"][0]["uuid"]
-            ### Update to latest family data
-            uuid_to_family[fam_uuid] = family
-        ### Now update the store
-        f = open(db_abs_paths["uuid_to_family"], "w+")
-        f.write(json.dumps(uuid_to_family))
-        f.close()
-        return data_store
 
 def store_rankings(groups):
     rankings = {"top10_bandwidth": groups["bandwidth_top10"],

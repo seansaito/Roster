@@ -22,13 +22,6 @@ def add_uuid(flag, data_store):
     uuid_to_family = json.load(f)
     f.close()
 
-    # fingerprint_to_uuid, uuid_to_family = {}, {}
-    #
-    # for filename, store in [("fingerprint_to_uuid", fingerprint_to_uuid), ("uuid_to_family", uuid_to_family)]:
-    #     f = open(db_abs_paths[filename], "r+")
-    #     store = json.load(f)
-    #     f.close()
-
     ### Now loop through stores
     if flag == "relays":
         for relay in data_store:

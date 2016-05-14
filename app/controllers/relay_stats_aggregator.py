@@ -364,10 +364,6 @@ class RelayStatsAggregator(object):
         return overall_rank
 
     def analyze_family(self, family, curr_time):
-        # TODO Badges Needed:
-        #   * ipv6
-        #   * ipv6 for exit
-        #   * total points (linear combination of all badges/stats)
         badges = {}
         fingerprint = family["families"][0]["fingerprint"]
         badges["bandwidth"] = self.get_bandwidth_percentile(fingerprint)
