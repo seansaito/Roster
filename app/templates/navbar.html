@@ -6,15 +6,15 @@
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-          <li><a href="{{ url_for ('badges') }}">Badges</a>
+          <li><a href="{{ url_for ('badges') }}">Badges</a></li>
+          <li><a href="{{ url_for ('faq') }}">FAQ</a></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Raw Data<span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="https://roster-tor.s3.amazonaws.com/stats.csv">Relay Stats</a></li>
-              <li><a href="https://roster-tor.s3.amazonaws.com/bandwidth.json">Bandwidth Rankings</a></li>
-              <li><a href="https://roster-tor.s3.amazonaws.com/consensus.json">Consensus Rankings</a></li>
+              <li><a href="static/json/bandwidth.json">Bandwidth Rankings</a></li>
+              <li><a href="static/json/consensus.json">Consensus Rankings</a></li>
             </ul>
-            
+
           </li>
       </ul>
 {% if not top10_bandwidth and not top10_consensus %}
@@ -29,7 +29,7 @@
           </li>
         </form>
       </ul>
-{% endif %}      
+{% endif %}
     </div>
   </div>
 </nav>
