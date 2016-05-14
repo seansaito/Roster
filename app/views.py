@@ -281,6 +281,6 @@ badges = [
 def badges():
     return render_template("badges.html", badges=badges)
 
-@app.route("/faq")
+@app.route("/faqs")
 def faq():
     return render_template("faq.html")
