@@ -217,7 +217,7 @@ class RelayStatsAggregator(object):
             if flag in relay["flags"]:
                 counter = 0
                 for country, count in countries_ordered_by_relay_count:
-                    if relay["country"].upper() == country:
+                    if "country" in relay and relay["country"].upper() == country:
                         # print "[get_country_diversity_badge] Hit with counter: %d" % counter
                         break
                     else:

@@ -15,6 +15,9 @@ roster/
 # C extensions
 *.so
 
+# Mac stuff
+.DS_Store
+
 # Distribution / packaging
 .Python
 env/
