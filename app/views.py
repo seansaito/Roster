@@ -193,47 +193,56 @@ badges_list = [
     {
         "name": "Bandwidth",
         "icon": "rocket",
-        "tiers": 4
+        "tiers": 4,
+        "percentiles": ["80th percentile", "60th percentile", "40th percentile", "20th percentile"]
     },
     {
         "name": "Exit Bandwidth",
         "icon": "exit",
-        "tiers": 4
+        "tiers": 4,
+        "percentiles": ["80th percentile", "60th percentile", "40th percentile", "20th percentile"]
     },
     {
         "name": "Consensus Weight",
         "icon": "library",
-        "tiers": 4
+        "tiers": 4,
+        "percentiles": ["80th percentile", "60th percentile", "40th percentile", "20th percentile"]
     },
     {
         "name": "Exit Diversity by Country",
         "icon": "podcast",
-        "tiers": 4
+        "tiers": 4,
+        "percentiles": ["80th percentile", "60th percentile", "40th percentile", "20th percentile"]
     },
     {
         "name": "Guard Diversity by Country",
         "icon": "marvin",
-        "tiers": 4
+        "tiers": 4,
+        "percentiles": ["80th percentile", "60th percentile", "40th percentile", "20th percentile"]
     },
     {
         "name": "Exit Diversity by AS Org",
         "icon": "organization",
-        "tiers": 4
+        "tiers": 4,
+        "percentiles": ["80th percentile", "60th percentile", "40th percentile", "20th percentile"]
     },
     {
         "name": "Guard Diversity by AS Org",
         "icon": "spaceinvaders",
-        "tiers": 4
+        "tiers": 4,
+        "percentiles": ["80th percentile", "60th percentile", "40th percentile", "20th percentile"]
     },
     {
         "name": "Number of Countries",
         "icon": "earth",
-        "tiers": 4
+        "tiers": 4,
+        "percentiles": ["Above 20 countries", "10 - 20 countries", "3 - 10 countries", "Below 3 countries"]
     },
     {
         "name": "Number of Relays",
         "icon": "airplane",
-        "tiers": 4
+        "tiers": 4,
+        "percentiles": ["Above 20 relays", "10 - 20 relays", "5 - 10 relays", "2 - 5 relays"]
     },
     {
         "name": "Has Contact for At Least Half of Relays",
@@ -268,12 +277,14 @@ badges_list = [
     {
         "name": "Age of Family",
         "icon": "hipster2",
-        "tiers": 4
+        "tiers": 4,
+        "percentiles": ["80th percentile", "60th percentile", "40th percentile", "20th percentile"]
     },
     {
         "name": "Maximum Uptime",
         "icon": "clock2",
-        "tiers": 4
+        "tiers": 4,
+        "percentiles": ["80th percentile", "60th percentile", "40th percentile", "20th percentile"]
     }
 ]
 
