@@ -279,7 +279,7 @@ badges = [
 
 @app.route("/badges")
 def badges():
-    return render_template("badges.html", badges=badges)
+    return render_template("badges.html", badges_list=badges_list)
 
 @app.route("/faqs")
 def faqs():
