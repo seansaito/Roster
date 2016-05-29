@@ -189,7 +189,7 @@ def search():
     return redirect(url_for("family_detail", fingerprint=fingerprint))
 
 # For generating list of badges in /badges
-badges = [
+badges_list = [
     {
         "name": "Bandwidth",
         "icon": "rocket",
